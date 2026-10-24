@@ -28,6 +28,8 @@ final class DictationSession {
     private var analyzer: SpeechAnalyzer?
     private var source: (any AudioSource)?
     private var collector: Task<String, any Error>?
+    /// Settled text after vocabulary fixes, cached: it only changes when a segment settles.
+    private var displayedSettled = (raw: "", fixed: "")
 
     /// Self-test only: read this file instead of the microphone.
     private let testAudio: URL?
@@ -47,6 +49,18 @@ final class DictationSession {
 
     /// Called on the main actor when the microphone delivers its first audio.
     var onMicLive: (() -> Void)?
+    /// Called as words are recognized, with settled text and the current guess, both
+    /// with vocabulary fixes applied.
+    var onLiveText: ((_ settled: String, _ pending: String) -> Void)?
+
+    private func publish(_ transcript: LiveTranscript) {
+        guard let onLiveText else { return }
+        let settled = transcript.settled
+        if settled != displayedSettled.raw {
+            displayedSettled = (settled, vocabulary.canonicalize(settled))
+        }
+        onLiveText(displayedSettled.fixed, vocabulary.canonicalize(transcript.unsettled))
+    }
 
     func start() async throws {
         guard await AssetInventory.status(forModules: [module]) == .installed else {
@@ -65,6 +79,7 @@ final class DictationSession {
         // start. It needs timestamps that keep increasing, i.e. the capture provider.
         if module is DictationTranscriber, source is CaptureSource,
            let recognizer, let run = recognizer.begin(source.pipe.stream) {
+            run.onUpdate = { [weak self] in self?.publish($0) }
             self.run = run
             timings.sharedAnalyzer = true
             return
@@ -87,11 +102,13 @@ final class DictationSession {
 
         // Collect results before starting so nothing early is missed.
         let module = self.module
-        collector = Task {
-            var finals: [(CMTime, String)] = []
-            for try await final in TranscriptionEngine.finals(of: module) { finals.append(final) }
-            return finals.sorted { $0.0 < $1.0 }.map(\.1).joined()
-                .trimmingCharacters(in: .whitespacesAndNewlines)
+        collector = Task { [weak self] in
+            var transcript = LiveTranscript()
+            for try await segment in TranscriptionEngine.results(of: module) {
+                transcript.add(segment)
+                self?.publish(transcript)
+            }
+            return transcript.text
         }
         try await analyzer.start(inputSequence: input)
     }

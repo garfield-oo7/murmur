@@ -1,3 +1,4 @@
+import CoreMedia
 import Foundation
 import Testing
 @testable import MurmurCore
@@ -149,5 +150,48 @@ private let vocabulary = Vocabulary(text: """
         #expect(file.load() == [new])
         try file.clear()
         #expect(file.load().isEmpty)
+    }
+}
+
+@Suite struct LiveTranscriptTests {
+    private func segment(_ start: Double, _ end: Double, _ text: String, final: Bool) -> LiveTranscript.Segment {
+        LiveTranscript.Segment(range: CMTimeRange(start: CMTime(seconds: start, preferredTimescale: 1000),
+                                                  end: CMTime(seconds: end, preferredTimescale: 1000)),
+                               text: text, isFinal: final)
+    }
+
+    @Test func guessesReplaceEachOtherUntilSettled() {
+        var t = LiveTranscript()
+        t.add(segment(0, 1, "I", final: false))
+        t.add(segment(0, 2, "I connected over tail", final: false))
+        #expect(t.settled == "" && t.unsettled == "I connected over tail")
+        t.add(segment(0, 3, "I connected over Tailscale.", final: true))
+        #expect(t.settled == "I connected over Tailscale." && t.unsettled == "")
+        t.add(segment(3, 4, " Then", final: false))
+        #expect(t.text == "I connected over Tailscale. Then")
+    }
+
+    @Test func ignoresLateGuessesForSettledAudio() {
+        var t = LiveTranscript()
+        t.add(segment(0, 3, "Hello there.", final: true))
+        t.add(segment(0, 2, "Hello th", final: false))
+        #expect(t.text == "Hello there.")
+    }
+
+    @Test func keepsAnUnsettledTailAtTheEnd() {
+        var t = LiveTranscript()
+        t.add(segment(0, 2, "First part.", final: true))
+        t.add(segment(2, 3, " and the end", final: false))
+        #expect(t.text == "First part. and the end")
+    }
+
+    @Test func promotesAGuessThatWasSettledWithoutBeingMarked() {
+        var t = LiveTranscript()
+        t.add(segment(0, 2, "One two", final: false))
+        t.add(segment(2, 3, " three", final: false))
+        #expect(t.text == "One two three")
+        // The real settled segment for 0–2 replaces the promoted guess.
+        t.add(segment(0, 2, "One, two", final: true))
+        #expect(t.text == "One, two three")
     }
 }

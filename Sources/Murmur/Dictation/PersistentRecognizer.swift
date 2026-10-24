@@ -13,8 +13,8 @@ import Speech
 /// the capture provider (host-clock timestamps) but not for the engine fallback or
 /// file tests; those keep using a fresh analyzer per dictation.
 ///
-/// Results arrive with `isFinal == false` in this mode; finalize returning is the
-/// signal that everything up to `end` has been delivered.
+/// Results go to the current run as they arrive; finalize returning is the signal that
+/// everything up to `end` has been delivered.
 final class PersistentRecognizer {
     enum State: Equatable {
         case idle
@@ -25,7 +25,8 @@ final class PersistentRecognizer {
 
     private(set) var state = State.idle
     private var analyzer: SpeechAnalyzer?
-    private var results: [(range: CMTimeRange, text: String)] = []
+    /// The dictation the analyzer is currently hearing; results go to it.
+    private var current: Run?
     private var collector: Task<Void, Never>?
     /// Identifies the vocabulary the current analyzer was compiled with.
     private var compiledFingerprint: String?
@@ -58,13 +59,12 @@ final class PersistentRecognizer {
             Task { await old.cancelAndFinishNow() }
         }
         collector?.cancel()
-        results = []
         self.analyzer = analyzer
         compiledFingerprint = fingerprint
         collector = Task { [weak self] in
             do {
-                for try await result in TranscriptionEngine.results(of: module) {
-                    self?.results.append(result)
+                for try await segment in TranscriptionEngine.results(of: module) {
+                    self?.current?.receive(segment)
                 }
             } catch {
                 Self.log.error("results ended: \(error, privacy: .public)")
@@ -76,19 +76,26 @@ final class PersistentRecognizer {
     /// One dictation's worth of audio going through the shared analyzer.
     final class Run {
         fileprivate let analysis: Task<CMTime?, any Error>
-        fileprivate let firstResult: Int
+        private(set) var transcript = LiveTranscript()
+        /// Called with every update while the dictation runs.
+        var onUpdate: ((LiveTranscript) -> Void)?
 
-        fileprivate init(analysis: Task<CMTime?, any Error>, firstResult: Int) {
+        fileprivate init(analysis: Task<CMTime?, any Error>) {
             self.analysis = analysis
-            self.firstResult = firstResult
+        }
+
+        fileprivate func receive(_ segment: LiveTranscript.Segment) {
+            transcript.add(segment)
+            onUpdate?(transcript)
         }
     }
 
     /// Starts analyzing `stream`; nil if the analyzer isn't ready.
     func begin(_ stream: AsyncStream<AnalyzerInput>) -> Run? {
         guard state == .ready, let analyzer else { return nil }
-        let analysis = Task { try await analyzer.analyzeSequence(stream) }
-        return Run(analysis: analysis, firstResult: results.count)
+        let run = Run(analysis: Task { try await analyzer.analyzeSequence(stream) })
+        current = run
+        return run
     }
 
     /// Waits for the run's audio to be analyzed and returns its text.
@@ -99,19 +106,19 @@ final class PersistentRecognizer {
         }
         // Results normally land before finalize returns; allow a little slack.
         try? await Task.sleep(for: .milliseconds(30))
-        return results.dropFirst(run.firstResult)
-            .sorted { $0.range.start < $1.range.start }
-            .map(\.text).joined()
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+        if current === run { current = nil }
+        run.onUpdate = nil
+        return run.transcript.text
     }
 
     /// Discards the run's audio so it can't leak into the next dictation.
     func cancel(_ run: Run) async {
+        if current === run { current = nil }
+        run.onUpdate = nil
         guard let analyzer else { return }
         if let end = try? await run.analysis.value {
             await analyzer.cancelAnalysis(before: end)
         }
-        if results.count > run.firstResult { results.removeSubrange(run.firstResult...) }
     }
 
     /// After an error the analyzer may be unusable; compile a fresh one next time.

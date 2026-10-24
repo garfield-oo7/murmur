@@ -41,6 +41,7 @@ It quits Murmur, removes the login item, the app, its settings, your vocabulary 
 - Murmur pastes through the clipboard and puts back what you had copied. The dictation is marked as temporary, so clipboard managers that follow the nspasteboard.org convention skip it. If an app doesn't like pasting, switch **Insert text by** in Settings.
 - Password fields (and Terminal with Secure Keyboard Entry) block typed input on purpose. Murmur then leaves the text in its menu.
 - While you hold the shortcut, a small **waveform pill** at the bottom of the screen shows Murmur is listening. Its bars follow your voice, then shimmer while the text is produced. It never takes focus from your app.
+- **Live text:** while you speak, a caption above the pill shows the last two lines of what Murmur hears, about half a second behind your voice, with your vocabulary already applied. Words that are still a guess are slightly dimmed. Nothing is typed until you let go. Turn it off with **Settings → Show words as you speak**.
 - **Esc** while holding cancels (the pill shakes). A very short tap does nothing.
 - **Vocabulary:** Murmur knows about 2,900 AI-engineering and developer names (current models, labs, tools) from `Resources/Vocabulary.txt`, and spells them exactly: "tail scale" → Tailscale, "deep seek v3" → DeepSeek-V3, "cube control" → kubectl. Add your own with **Settings → Edit My Vocabulary…** (same format; the changes apply after your next dictation).
 - **Paths and commands:** say "tilde slash dot claude slash settings dot json" for `~/.claude/settings.json`, or "slash model" for `/model`.
@@ -66,7 +67,7 @@ Single English words in the list (like "Linear") never rewrite ordinary speech. 
 
 ```sh
 swift build                    # debug build
-swift test                     # MurmurCore tests: vocabulary, spoken syntax, history file
+swift test                     # MurmurCore tests: vocabulary, spoken syntax, live transcript, history file
 scripts/install.sh --debug     # run the real app (permissions need the signed bundle)
 
 # What would Murmur type for this audio? Uses the same recognizer and vocabulary.
@@ -86,7 +87,7 @@ say -o /tmp/sample.wav --data-format=LEI16@16000 "open tilde slash dot claude"
   - `Dictation/`: mic capture, the speech recognizer and the hold-to-talk session
   - `Pill/`: the waveform pill
   - `System/`: hotkey, permissions, text insertion, login item, speech model
-- `Sources/MurmurCore/`: vocabulary, spoken-syntax rules and the history file format (pure Swift, unit-tested)
+- `Sources/MurmurCore/`: vocabulary, spoken-syntax rules, live-transcript merging and the history file format (pure Swift, unit-tested)
 - `Tests/MurmurCoreTests/`: tests for MurmurCore
 - `Resources/`: `Info.plist`, entitlements and the bundled `Vocabulary.txt`
 - `scripts/`: `install.sh`, `uninstall.sh`, `make-dev-cert.sh`

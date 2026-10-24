@@ -65,6 +65,11 @@ final class DictationController {
         self.session = session
         // The mic needs ~0.25 s to deliver audio; the sound and the bars coming alive
         // mean "go ahead and speak".
+        session.onLiveText = { [weak self, weak session] settled, pending in
+            guard let self, let session, self.session === session else { return }
+            self.pill.liveText(settled: settled, pending: pending)
+            if self.logsTranscripts { Self.log.notice("live: \(settled, privacy: .public) [\(pending, privacy: .public)]") }
+        }
         session.onMicLive = { [weak self, weak session] in
             guard let self, let session, self.session === session, self.state != .idle else { return }
             Sound.start.play()

@@ -55,12 +55,9 @@ enum CommandLineTool {
         context.contextualStrings[.general] = vocabulary.terms
         try await analyzer.setContext(context)
         let collector = Task {
-            var parts: [(CMTime, String)] = []
-            for try await result in TranscriptionEngine.results(of: module) {
-                parts.append((result.range.start, result.text))
-            }
-            return parts.sorted { $0.0 < $1.0 }.map(\.1).joined()
-                .trimmingCharacters(in: .whitespacesAndNewlines)
+            var transcript = LiveTranscript()
+            for try await segment in TranscriptionEngine.results(of: module) { transcript.add(segment) }
+            return transcript.text
         }
         try await analyzer.start(inputAudioFile: AVAudioFile(forReading: url), finishAfterFile: true)
         let raw = try await collector.value

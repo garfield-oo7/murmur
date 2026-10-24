@@ -44,41 +44,39 @@ enum TranscriptionEngine {
     static let options = SpeechAnalyzer.Options(priority: .userInitiated, modelRetention: .processLifetime)
     private static let log = Logger(subsystem: "io.github.garfield-oo7.Murmur", category: "engine")
 
-    /// Finals only; volatile results aren't shown.
+    /// Reports guesses as you speak (volatile results) as well as settled text. The
+    /// guesses cost the speech service about 4% of one core while you talk.
     static func makeModule(_ kind: Kind = .current) -> any SpeechModule {
         switch kind {
         case .dictation:
             DictationTranscriber(locale: locale, contentHints: [], transcriptionOptions: [.punctuation],
-                                 reportingOptions: [], attributeOptions: [])
+                                 reportingOptions: [.volatileResults], attributeOptions: [])
         case .speech:
-            SpeechTranscriber(locale: locale, transcriptionOptions: [], reportingOptions: [], attributeOptions: [])
+            SpeechTranscriber(locale: locale, transcriptionOptions: [], reportingOptions: [.volatileResults],
+                              attributeOptions: [])
         }
     }
 
-    /// Final results of either transcriber, as (start time, text).
-    static func finals(of module: any SpeechModule) -> AsyncThrowingStream<(CMTime, String), any Error> {
-        stream(of: module, finalOnly: true) { ($0.start, $1) }
-    }
-
-    /// Every result, final or not. With `finalize(through:)` on a reused analyzer the
-    /// results come out with `isFinal == false`.
-    static func results(of module: any SpeechModule) -> AsyncThrowingStream<(range: CMTimeRange, text: String), any Error> {
-        stream(of: module, finalOnly: false) { (range: $0, text: $1) }
-    }
-
-    private static func stream<T: Sendable>(of module: any SpeechModule, finalOnly: Bool,
-                                            _ transform: @escaping @Sendable (CMTimeRange, String) -> T)
-        -> AsyncThrowingStream<T, any Error> {
+    /// Every result of either transcriber. A result counts as settled when the
+    /// recognizer says so, or when it ends before the point up to which results are
+    /// final (on a reused analyzer, `finalize(through:)` results can arrive with
+    /// `isFinal == false`).
+    static func results(of module: any SpeechModule) -> AsyncThrowingStream<LiveTranscript.Segment, any Error> {
         AsyncThrowingStream { continuation in
             let task = Task {
+                func segment(_ range: CMTimeRange, _ text: AttributedString, _ isFinal: Bool,
+                             _ finalizedThrough: CMTime) -> LiveTranscript.Segment {
+                    LiveTranscript.Segment(range: range, text: String(text.characters),
+                                           isFinal: isFinal || range.end <= finalizedThrough)
+                }
                 do {
                     if let module = module as? DictationTranscriber {
-                        for try await r in module.results where !finalOnly || r.isFinal {
-                            continuation.yield(transform(r.range, String(r.text.characters)))
+                        for try await r in module.results {
+                            continuation.yield(segment(r.range, r.text, r.isFinal, r.resultsFinalizationTime))
                         }
                     } else if let module = module as? SpeechTranscriber {
-                        for try await r in module.results where !finalOnly || r.isFinal {
-                            continuation.yield(transform(r.range, String(r.text.characters)))
+                        for try await r in module.results {
+                            continuation.yield(segment(r.range, r.text, r.isFinal, r.resultsFinalizationTime))
                         }
                     }
                     continuation.finish()

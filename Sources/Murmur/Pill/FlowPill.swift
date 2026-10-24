@@ -14,6 +14,7 @@ final class FlowPill {
     }
 
     static let enabledKey = "showPill"
+    static let liveTextKey = "showLiveText"
 
     enum Position: String, CaseIterable, Identifiable {
         case bottom, center
@@ -27,6 +28,8 @@ final class FlowPill {
     }
 
     private(set) var phase = Phase.hidden
+    /// Words recognized so far while dictating: settled text and the current guess.
+    private(set) var caption: (settled: String, pending: String)?
     /// When the current shake (cancel / error) started, for the view's animation.
     private(set) var shakeStart = Date.distantPast
     let meter: LevelMeter
@@ -42,12 +45,22 @@ final class FlowPill {
         UserDefaults.standard.object(forKey: Self.enabledKey) as? Bool ?? true
     }
 
+    private var showsLiveText: Bool {
+        UserDefaults.standard.object(forKey: Self.liveTextKey) as? Bool ?? true
+    }
+
     // MARK: Events from the dictation controller
 
     func listening() {
         guard isEnabled else { return }
         show()
         phase = .listening(live: false)
+        caption = nil
+    }
+
+    func liveText(settled: String, pending: String) {
+        guard showsLiveText, phase == .listening(live: true) || phase == .transcribing else { return }
+        caption = settled.isEmpty && pending.isEmpty ? nil : (settled, pending)
     }
 
     func micLive() {
@@ -94,6 +107,7 @@ final class FlowPill {
             try? await Task.sleep(for: delay)
             guard !Task.isCancelled else { return }
             phase = .hidden
+            caption = nil
             // Let the collapse animation finish before removing the window.
             try? await Task.sleep(for: .milliseconds(300))
             guard !Task.isCancelled else { return }
@@ -101,7 +115,9 @@ final class FlowPill {
         }
     }
 
-    private static let panelSize = CGSize(width: 220, height: 72)
+    /// Room for the capsule plus the live-text caption above it; the panel is
+    /// transparent and ignores the mouse, so the empty part is invisible.
+    private static let panelSize = CGSize(width: 560, height: 150)
 
     private func makePanel() -> NSPanel {
         let panel = NSPanel(contentRect: CGRect(origin: .zero, size: Self.panelSize),
@@ -147,6 +163,20 @@ private struct PillView: View {
     private var isVisible: Bool { pill.phase != .hidden }
 
     var body: some View {
+        VStack(spacing: 8) {
+            if isVisible, let caption = pill.caption {
+                CaptionView(settled: caption.settled, pending: caption.pending)
+                    .transition(.opacity.combined(with: .move(edge: .bottom)))
+            }
+            bars
+        }
+        .animation(.easeOut(duration: 0.2), value: pill.caption == nil)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+        .padding(.bottom, 14)
+        .accessibilityHidden(true)
+    }
+
+    private var bars: some View {
         TimelineView(.animation(paused: !isVisible)) { context in
             let t = context.date.timeIntervalSinceReferenceDate
             let level = CGFloat(pill.meter.level)
@@ -168,9 +198,6 @@ private struct PillView: View {
         .opacity(isVisible ? 1 : 0)
         .animation(.spring(response: 0.28, dampingFraction: 0.72), value: isVisible)
         .animation(.easeOut(duration: 0.15), value: pill.phase)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-        .padding(.bottom, 14)
-        .accessibilityHidden(true)
     }
 
     private var capsuleBackground: some View {
@@ -218,5 +245,59 @@ private struct PillView: View {
         let elapsed = date.timeIntervalSince(pill.shakeStart)
         guard elapsed < 0.35 else { return 0 }
         return sin(elapsed * 55) * 6 * (1 - elapsed / 0.35)
+    }
+}
+
+/// The last couple of lines of what you've said: settled words in white, the
+/// recognizer's current guess dimmed.
+private struct CaptionView: View {
+    let settled: String
+    let pending: String
+
+    /// About two lines at this width; older words scroll off the front.
+    private static let maxCharacters = 130
+
+    var body: some View {
+        Text(attributed)
+            .font(.system(size: 13, weight: .medium))
+            .lineLimit(2, reservesSpace: false)
+            .truncationMode(.head)
+            .multilineTextAlignment(.leading)
+            .frame(maxWidth: 480, alignment: .leading)
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 9)
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(.ultraThinMaterial)
+                    .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(.black.opacity(0.72)))
+                    .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .strokeBorder(.white.opacity(0.14), lineWidth: 0.5))
+                    .shadow(color: .black.opacity(0.35), radius: 8, y: 3)
+            )
+            .environment(\.colorScheme, .dark)
+    }
+
+    private var attributed: AttributedString {
+        var (settled, pending) = (settled, pending.trimmingCharacters(in: .whitespaces))
+        if !settled.isEmpty, !pending.isEmpty, settled.last?.isWhitespace == false { settled += " " }
+        // Keep the tail, cutting at a word boundary.
+        let overflow = settled.count + pending.count - Self.maxCharacters
+        if overflow > 0 {
+            if overflow < settled.count {
+                var tail = settled.dropFirst(overflow)
+                if let space = tail.firstIndex(of: " ") { tail = tail[tail.index(after: space)...] }
+                settled = "…" + tail
+            } else {
+                settled = ""
+                pending = "…" + pending.suffix(Self.maxCharacters)
+            }
+        }
+        var text = AttributedString(settled)
+        text.foregroundColor = .white
+        var guess = AttributedString(pending)
+        guess.foregroundColor = .white.opacity(0.78)
+        text.append(guess)
+        return text
     }
 }
