@@ -14,3 +14,24 @@ On-device voice dictation for macOS 27. Hold **Option+D**, speak, and release: y
 
 ## Repo layout
 - `spike/`: feasibility checks (speech model availability, hotkey registration)
+- `prototype/`: `murmur-cli`, a command-line prototype (mic → `SpeechTranscriber` → text, with latency timings)
+
+## Prototype CLI
+
+```sh
+cd prototype
+swift build -c release
+
+# Speak, then press Enter to stop (the "key release"). The transcript goes to stdout, timings to stderr.
+.build/release/murmur-cli                     # mic via CaptureInputSequenceProvider (macOS 27)
+.build/release/murmur-cli --source engine     # mic via AVAudioEngine + AnalyzerInputConverter
+.build/release/murmur-cli --runs 3            # repeat to compare cold vs warm latency
+
+# No mic needed: transcribe a synthesized file, fed in real time
+say -o /tmp/sample.wav --data-format=LEI16@16000 "Testing one two three"
+.build/release/murmur-cli --file /tmp/sample.wav
+```
+
+Other flags: `--engine dictation` (DictationTranscriber), `--fast` (`.fastResults`), `--seconds N`, `--locale ID`. See `--help`.
+
+Run the mic modes from a terminal app (Terminal, iTerm, Ghostty). macOS asks for microphone access on behalf of that app the first time.
