@@ -15,6 +15,19 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
+            Toggle("Open Murmur at login", isOn: Binding(
+                get: { model.launchAtLogin.isEnabled },
+                set: { model.launchAtLogin.set($0) }
+            ))
+            if model.launchAtLogin.needsApproval {
+                LabeledContent("Needs your OK in System Settings") {
+                    Button("Open Login Items…") { model.launchAtLogin.openSystemSettings() }
+                }
+                .font(.callout)
+            }
+            if let error = model.launchAtLogin.lastError {
+                Text(error).font(.caption).foregroundStyle(.red)
+            }
             LabeledContent("Dictation shortcut") {
                 ShortcutRecorder(hotkey: model.hotkey)
             }
@@ -62,6 +75,7 @@ struct SettingsView: View {
             .disabled(!showPill)
         }
         .formStyle(.grouped)
+        .onAppear { model.launchAtLogin.refresh() }
         .frame(width: 420)
         .fixedSize()
     }

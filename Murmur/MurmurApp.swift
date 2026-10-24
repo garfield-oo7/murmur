@@ -20,6 +20,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         if !model.permissions.allGranted { model.showSetup() }
+        if !CommandLine.arguments.contains("--test-dictation") { model.launchAtLogin.enableOnFirstLaunch() }
         Task { [model] in
             // Reserving an on-disk model is instant; a real download runs in the
             // background and shows progress in the setup window.
@@ -67,6 +68,7 @@ final class AppModel {
     let speechModel = SpeechModel()
     let hotkey = HotkeyManager()
     let dictation = DictationController()
+    let launchAtLogin = LaunchAtLogin()
 
     // An AppKit-owned window rather than a SwiftUI `Window` scene: a menu bar app
     // launched in the background doesn't reliably get scene windows on screen.
