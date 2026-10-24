@@ -19,6 +19,7 @@ final class AppModel {
         hotkey.onPress = { [dictation] in dictation.keyDown() }
         hotkey.onRelease = { [dictation] in dictation.keyUp() }
         hotkey.onCancel = { [dictation] in dictation.cancel() }
+        hotkey.onRestart = { [dictation] in dictation.restart() }
         dictation.onError = { [weak self] error in
             switch error {
             case .microphoneNotAllowed, .modelNotInstalled, .accessibilityNotAllowed: self?.showSetup()

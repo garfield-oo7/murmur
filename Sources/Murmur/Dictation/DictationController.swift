@@ -41,6 +41,10 @@ final class DictationController {
     @ObservationIgnored private var session: DictationSession?
     @ObservationIgnored private var startTask: Task<Bool, Never>?
     @ObservationIgnored private var pressedAt = ContinuousClock.now
+    /// Between ⌫ and the new recording starting.
+    @ObservationIgnored private var isRestarting = false
+    /// Whether the hotkey is still held, for a release or Esc during a restart.
+    @ObservationIgnored private var keyIsDown = false
     /// The app being dictated into, for the history.
     @ObservationIgnored private var targetApp: NSRunningApplication?
     @ObservationIgnored var onError: ((DictationError) -> Void)?
@@ -54,8 +58,35 @@ final class DictationController {
             fail(.microphoneNotAllowed)
             return
         }
-        pressedAt = .now
+        keyIsDown = true
         targetApp = NSWorkspace.shared.frontmostApplication
+        startSession()
+    }
+
+    /// ⌫ while holding: throw away what's been said and start a new recording.
+    func restart() {
+        guard state == .starting || state == .listening, let old = session, !isRestarting else { return }
+        Self.log.notice("restarted")
+        isRestarting = true
+        session = nil
+        pill.listening() // clears the caption; bars wait for the new mic start
+        let oldStart = startTask
+        Task {
+            _ = await oldStart?.value
+            await old.cancel()
+            self.isRestarting = false
+            guard self.keyIsDown else {
+                // Released or cancelled while restarting: nothing was said since ⌫.
+                self.reset()
+                self.pill.finished()
+                return
+            }
+            self.startSession()
+        }
+    }
+
+    private func startSession() {
+        pressedAt = .now
         state = .starting
         lastError = nil
         meter.reset()
@@ -91,6 +122,8 @@ final class DictationController {
     }
 
     func keyUp() {
+        keyIsDown = false
+        guard !isRestarting else { return }
         guard state == .starting || state == .listening, let session else { return }
         let held = ContinuousClock.now - pressedAt
         guard held >= Self.minimumHold else {
@@ -150,6 +183,12 @@ final class DictationController {
 
     /// Esc while holding (or a too-short tap): throw the recording away.
     func cancel(quietly: Bool = false) {
+        keyIsDown = false
+        if isRestarting {
+            Sound.cancel.play()
+            pill.cancelled()
+            return
+        }
         guard let session, state != .idle else { return }
         reset()
         if quietly {

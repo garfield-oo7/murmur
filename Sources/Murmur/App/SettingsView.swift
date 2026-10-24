@@ -36,7 +36,7 @@ struct SettingsView: View {
             LabeledContent("Dictation shortcut") {
                 ShortcutRecorder(hotkey: model.hotkey)
             }
-            Text("Hold the shortcut, speak, and let go. Press Esc while holding to cancel.")
+            Text("Hold the shortcut, speak, and let go. While holding, press ⌫ to start over or Esc to cancel.")
                 .font(.callout)
                 .foregroundStyle(.secondary)
             Picker("Microphone", selection: $microphone) {

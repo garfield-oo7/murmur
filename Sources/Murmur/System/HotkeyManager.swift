@@ -83,6 +83,8 @@ final class HotkeyManager {
     @ObservationIgnored var onPress: (() -> Void)?
     @ObservationIgnored var onRelease: (() -> Void)?
     @ObservationIgnored var onCancel: (() -> Void)?
+    /// ⌫ while held: throw away what's been said and keep listening.
+    @ObservationIgnored var onRestart: (() -> Void)?
 
     @ObservationIgnored private var hotKeyRef: EventHotKeyRef?
     @ObservationIgnored private var cancelRefs: [EventHotKeyRef] = []
@@ -91,6 +93,7 @@ final class HotkeyManager {
     private static let signature: OSType = 0x4D524D52 // 'MRMR'
     private static let mainID: UInt32 = 1
     private static let cancelID: UInt32 = 2
+    private static let restartID: UInt32 = 3
     private static let defaultsKey = "hotkey"
     private static let log = Logger(subsystem: "io.github.garfield-oo7.Murmur", category: "hotkey")
 
@@ -137,15 +140,18 @@ final class HotkeyManager {
         return true
     }
 
-    /// Esc cancels only while the dictation key is held, so it's a hotkey just for that
-    /// window. Registered with and without Option since Option is usually still down.
+    /// Esc (cancel) and ⌫ (start over) only work while the dictation key is held, so
+    /// they're hotkeys just for that window. Registered with and without the shortcut's
+    /// modifiers, since those are usually still down.
     private func setCancelKeyActive(_ active: Bool) {
         if active, cancelRefs.isEmpty {
-            for modifiers in [0, shortcut.modifiers] {
-                var ref: EventHotKeyRef?
-                let id = EventHotKeyID(signature: Self.signature, id: Self.cancelID)
-                if RegisterEventHotKey(UInt32(kVK_Escape), modifiers, id, GetApplicationEventTarget(), 0, &ref) == noErr, let ref {
-                    cancelRefs.append(ref)
+            for (key, hotkeyID) in [(kVK_Escape, Self.cancelID), (kVK_Delete, Self.restartID)] {
+                for modifiers in [0, shortcut.modifiers] {
+                    var ref: EventHotKeyRef?
+                    let id = EventHotKeyID(signature: Self.signature, id: hotkeyID)
+                    if RegisterEventHotKey(UInt32(key), modifiers, id, GetApplicationEventTarget(), 0, &ref) == noErr, let ref {
+                        cancelRefs.append(ref)
+                    }
                 }
             }
         } else if !active {
@@ -211,6 +217,9 @@ final class HotkeyManager {
             isHeld = false
             setCancelKeyActive(false)
             onCancel?()
+        case (Self.restartID, true):
+            guard isHeld else { return }
+            onRestart?()
         default:
             break
         }

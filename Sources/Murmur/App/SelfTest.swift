@@ -17,14 +17,24 @@ extension AppDelegate {
         }
         var repeats = 1
         if let k = args.firstIndex(of: "--test-repeat"), k + 1 < args.count { repeats = Int(args[k + 1]) ?? 1 }
+        var restartAfter: Double?
+        if let r = args.firstIndex(of: "--test-restart"), r + 1 < args.count { restartAfter = Double(args[r + 1]) }
         Task {
             try? await Task.sleep(for: .seconds(6)) // let launch prep (model, vocabulary) finish
             for i in 0..<repeats {
                 if i > 0 { try? await Task.sleep(for: .seconds(20)) }
                 dictation.keyDown()
-                try? await Task.sleep(for: .seconds(seconds))
+                if let restartAfter {
+                    try? await Task.sleep(for: .seconds(restartAfter))
+                    dictation.restart()
+                    try? await Task.sleep(for: .seconds(max(0, seconds - restartAfter)))
+                } else {
+                    try? await Task.sleep(for: .seconds(seconds))
+                }
                 dictation.keyUp()
             }
+            try? await Task.sleep(for: .seconds(8)) // let the last one finish
+            SingleInstance.quitAndRelaunchNormally()
         }
     }
 }
