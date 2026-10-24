@@ -1,7 +1,7 @@
 import Foundation
 
 extension AppDelegate {
-    /// `open Murmur.app --args --test-dictation 4 [--test-audio file.wav] [--test-no-insert]`
+    /// `open Murmur.app --args --test-dictation 4 [--test-audio file.wav] [--test-no-insert] [--test-keep-history]`
     /// records for 4 s as if the hotkey were held, so dictation can be checked without
     /// pressing keys.
     func runSelfTestIfRequested() {
@@ -10,6 +10,7 @@ extension AppDelegate {
               let seconds = Double(args[i + 1]) else { return }
         let dictation = model.dictation
         dictation.logsTranscripts = true
+        dictation.history.isRecording = args.contains("--test-keep-history")
         dictation.insertsText = !args.contains("--test-no-insert")
         if let j = args.firstIndex(of: "--test-audio"), j + 1 < args.count {
             dictation.testAudio = URL(fileURLWithPath: args[j + 1])

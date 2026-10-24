@@ -96,6 +96,9 @@ final class DictationSession {
         try await analyzer.start(inputSequence: input)
     }
 
+    /// What the recognizer heard, before vocabulary fixes. Set by `finish()`.
+    private(set) var heard = ""
+
     /// Key released: stop the mic and wait for the final text.
     func finish() async throws -> String {
         let released = ContinuousClock.now
@@ -118,6 +121,7 @@ final class DictationSession {
             try await analyzer?.finalizeAndFinishThroughEndOfInput()
             raw = try await collector?.value ?? ""
         }
+        heard = raw
         let text = vocabulary.canonicalize(raw)
         timings.releaseToText = ContinuousClock.now - released
         recordStats()

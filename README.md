@@ -29,10 +29,10 @@ macOS ties those permissions to the app's code signature, so the install script 
 
 ```sh
 scripts/uninstall.sh                     # asks first; --yes to skip the question
-scripts/uninstall.sh --keep-vocabulary   # keep ~/Library/Application Support/Murmur
+scripts/uninstall.sh --keep-vocabulary   # keep ~/Library/Application Support/Murmur (vocabulary and history)
 ```
 
-It quits Murmur, removes the login item, the app, its settings, your vocabulary file and its privacy permissions. The speech model is shared with macOS dictation and stays. The script prints how to delete the "Murmur Dev" certificate if you want that gone too.
+It quits Murmur, removes the login item, the app, its settings, your vocabulary file and dictation history, and its privacy permissions. The speech model is shared with macOS dictation and stays. The script prints how to delete the "Murmur Dev" certificate if you want that gone too.
 
 ## Using Murmur
 
@@ -45,6 +45,7 @@ It quits Murmur, removes the login item, the app, its settings, your vocabulary 
 - **Vocabulary:** Murmur knows about 2,900 AI-engineering and developer names (current models, labs, tools) from `Resources/Vocabulary.txt`, and spells them exactly: "tail scale" → Tailscale, "deep seek v3" → DeepSeek-V3, "cube control" → kubectl. Add your own with **Settings → Edit My Vocabulary…** (same format; the changes apply after your next dictation).
 - **Paths and commands:** say "tilde slash dot claude slash settings dot json" for `~/.claude/settings.json`, or "slash model" for `/model`.
 - **Context-aware fixes:** phrases that are real English ("clots on it") are only corrected to a term (Claude Sonnet) when the sentence is technical, i.e. it has a path, a `/command` or a known name.
+- **History:** every dictation is saved on your Mac in `~/Library/Application Support/Murmur/History.jsonl`, one JSON line each: time, app, what the recognizer heard, what was typed, and how long it took. The menu's **Recent Dictations** shows the last 10 (click to copy). Settings lets you turn it off, choose how long to keep it (default 30 days), show it in Finder or clear it. Cancelled dictations (Esc) aren't saved. Comparing `heard` with `text` is a quick way to find words for your vocabulary.
 - Murmur **opens at login** (turn it off in Settings, or in System Settings → General → Login Items).
 - **Settings…** in the menu: change the shortcut, pick the microphone (built-in by default, so AirPods aren't hijacked), choose how text is inserted, turn sounds or the waveform off, and set how strongly the bars react.
 
@@ -65,7 +66,7 @@ Single English words in the list (like "Linear") never rewrite ordinary speech. 
 
 ```sh
 swift build                    # debug build
-swift test                     # vocabulary and spoken-syntax tests (MurmurCore)
+swift test                     # MurmurCore tests: vocabulary, spoken syntax, history file
 scripts/install.sh --debug     # run the real app (permissions need the signed bundle)
 
 # What would Murmur type for this audio? Uses the same recognizer and vocabulary.
@@ -85,7 +86,7 @@ say -o /tmp/sample.wav --data-format=LEI16@16000 "open tilde slash dot claude"
   - `Dictation/`: mic capture, the speech recognizer and the hold-to-talk session
   - `Pill/`: the waveform pill
   - `System/`: hotkey, permissions, text insertion, login item, speech model
-- `Sources/MurmurCore/`: vocabulary and spoken-syntax rules (pure Swift, unit-tested)
+- `Sources/MurmurCore/`: vocabulary, spoken-syntax rules and the history file format (pure Swift, unit-tested)
 - `Tests/MurmurCoreTests/`: tests for MurmurCore
 - `Resources/`: `Info.plist`, entitlements and the bundled `Vocabulary.txt`
 - `scripts/`: `install.sh`, `uninstall.sh`, `make-dev-cert.sh`

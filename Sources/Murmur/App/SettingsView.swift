@@ -13,6 +13,9 @@ struct SettingsView: View {
     @AppStorage(Microphone.defaultsKey) private var microphone = Microphone.builtIn
     @AppStorage(TranscriptionEngine.Kind.key) private var engine = TranscriptionEngine.Kind.dictation.rawValue
     @AppStorage(TextInserter.methodKey) private var insertionMethod = TextInserter.Method.paste.rawValue
+    @AppStorage(DictationHistory.enabledKey) private var keepHistory = true
+    @AppStorage(DictationHistory.retentionKey) private var historyDays = 30
+    @State private var confirmingClear = false
 
     var body: some View {
         Form {
@@ -56,6 +59,24 @@ struct SettingsView: View {
             }
             Picker("Insert text by", selection: $insertionMethod) {
                 ForEach(TextInserter.Method.allCases) { Text($0.title).tag($0.rawValue) }
+            }
+            Toggle("Keep dictation history", isOn: $keepHistory)
+            Picker("Keep history for", selection: $historyDays) {
+                ForEach(DictationHistory.retentionChoices, id: \.self) {
+                    Text(DictationHistory.title(forRetention: $0)).tag($0)
+                }
+            }
+            .disabled(!keepHistory)
+            .onChange(of: historyDays) { model.dictation.history.load() }
+            LabeledContent("Stored only on this Mac") {
+                HStack {
+                    Button("Show in Finder") { model.dictation.history.showInFinder() }
+                    Button("Clear History…") { confirmingClear = true }
+                }
+            }
+            .font(.callout)
+            .confirmationDialog("Delete your whole dictation history?", isPresented: $confirmingClear) {
+                Button("Clear History", role: .destructive) { model.dictation.history.clear() }
             }
             Toggle("Play start and stop sounds", isOn: $playSounds)
             Toggle("Show waveform while dictating", isOn: $showPill)

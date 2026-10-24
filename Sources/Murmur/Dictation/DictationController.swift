@@ -32,6 +32,7 @@ final class DictationController {
     /// Analyzer with the vocabulary compiled in, reused across dictations.
     @ObservationIgnored let recognizer = PersistentRecognizer()
     @ObservationIgnored let pill: FlowPill
+    let history = DictationHistory()
 
     init() {
         pill = FlowPill(meter: meter)
@@ -40,6 +41,8 @@ final class DictationController {
     @ObservationIgnored private var session: DictationSession?
     @ObservationIgnored private var startTask: Task<Bool, Never>?
     @ObservationIgnored private var pressedAt = ContinuousClock.now
+    /// The app being dictated into, for the history.
+    @ObservationIgnored private var targetApp: NSRunningApplication?
     @ObservationIgnored var onError: ((DictationError) -> Void)?
     private static let log = Logger(subsystem: "io.github.garfield-oo7.Murmur", category: "dictation")
 
@@ -52,6 +55,7 @@ final class DictationController {
             return
         }
         pressedAt = .now
+        targetApp = NSWorkspace.shared.frontmostApplication
         state = .starting
         lastError = nil
         meter.reset()
@@ -94,28 +98,44 @@ final class DictationController {
         let startTask = self.startTask
         Task {
             guard await startTask?.value == true, self.session === session else { return }
+            let app = self.targetApp
+            let record = { (text: String, outcome: HistoryEntry.Outcome, error: String?) in
+                self.record(session, app: app, held: held, text: text, outcome: outcome, error: error)
+            }
+            let text: String
             do {
-                let text = try await session.finish()
-                self.logTimings(session.timings, held: held)
-                if text.isEmpty {
-                    Self.log.notice("no speech recognized")
-                } else {
-                    self.lastTranscript = text
-                    if self.logsTranscripts { Self.log.notice("transcript: \(text, privacy: .public)") }
-                    if self.insertsText { try await self.insert(text) }
-                    if self.logsTranscripts, self.insertsText {
+                text = try await session.finish()
+            } catch {
+                Self.log.error("finish failed: \(error, privacy: .public)")
+                record("", .failed, error.localizedDescription)
+                if let error = error as? DictationError { self.fail(error) } else { self.fail(message: error.localizedDescription) }
+                if self.session === session { self.reset() }
+                return
+            }
+            self.logTimings(session.timings, held: held)
+            if text.isEmpty {
+                Self.log.notice("no speech recognized")
+            } else {
+                self.lastTranscript = text
+                if self.logsTranscripts { Self.log.notice("transcript: \(text, privacy: .public)") }
+            }
+            do {
+                if !text.isEmpty, self.insertsText {
+                    try await self.insert(text)
+                    record(text, .inserted, nil)
+                    if self.logsTranscripts {
                         try? await Task.sleep(for: .milliseconds(500))
                         let landed = TextInserter.focusedTextForTesting() ?? "(unreadable)"
                         Self.log.notice("focused text after insert: \(landed, privacy: .public)")
                     }
+                } else if !text.isEmpty {
+                    record(text, .notInserted, nil)
                 }
                 Sound.stop.play()
                 self.pill.finished()
-            } catch let error as DictationError {
-                self.fail(error)
             } catch {
-                Self.log.error("finish failed: \(error, privacy: .public)")
-                self.fail(message: error.localizedDescription)
+                record(text, .notInserted, error.localizedDescription)
+                if let error = error as? DictationError { self.fail(error) } else { self.fail(message: error.localizedDescription) }
             }
             if self.session === session { self.reset() }
             // Pick up vocabulary edits for next time (no-op if unchanged).
@@ -149,6 +169,15 @@ final class DictationController {
         } catch TextInserter.Failure.notTrusted {
             throw DictationError.accessibilityNotAllowed
         }
+    }
+
+    private func record(_ session: DictationSession, app: NSRunningApplication?, held: Duration,
+                        text: String, outcome: HistoryEntry.Outcome, error: String?) {
+        history.record(HistoryEntry(
+            app: app?.localizedName, bundleID: app?.bundleIdentifier,
+            heard: session.heard, text: text, outcome: outcome, error: error,
+            heldSeconds: held / .seconds(1),
+            latencyMs: Int(session.timings.releaseToText / .milliseconds(1))))
     }
 
     private func reset() {

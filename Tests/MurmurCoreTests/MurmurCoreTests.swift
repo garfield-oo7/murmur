@@ -111,3 +111,43 @@ private let vocabulary = Vocabulary(text: """
         #expect(bundled.canonicalize(prose) == prose)
     }
 }
+
+@Suite struct HistoryFileTests {
+    private func makeFile() -> HistoryFile {
+        HistoryFile(url: FileManager.default.temporaryDirectory
+            .appending(path: "murmur-tests-\(UUID().uuidString)/History.jsonl"))
+    }
+
+    @Test func appendsAndLoadsInOrder() throws {
+        let file = makeFile()
+        defer { try? FileManager.default.removeItem(at: file.url.deletingLastPathComponent()) }
+        #expect(file.load().isEmpty)
+        let first = HistoryEntry(date: Date(timeIntervalSince1970: 1_000), app: "Notes", heard: "tail scale",
+                                 text: "Tailscale", outcome: .inserted, heldSeconds: 1.5, latencyMs: 120)
+        let second = HistoryEntry(date: Date(timeIntervalSince1970: 2_000), heard: "hi\nthere", text: "hi\nthere",
+                                  outcome: .notInserted, error: "blocked")
+        try file.append(first)
+        try file.append(second)
+        #expect(file.load() == [first, second])
+        let mode = try FileManager.default.attributesOfItem(atPath: file.url.path)[.posixPermissions] as? Int
+        #expect(mode == 0o600)
+    }
+
+    @Test func prunesOldEntriesAndSkipsDamagedLines() throws {
+        let file = makeFile()
+        defer { try? FileManager.default.removeItem(at: file.url.deletingLastPathComponent()) }
+        let old = HistoryEntry(date: Date(timeIntervalSince1970: 1_000), heard: "a", text: "a", outcome: .inserted)
+        let new = HistoryEntry(date: Date(timeIntervalSince1970: 5_000), heard: "b", text: "b", outcome: .failed)
+        try file.append(old)
+        let handle = try FileHandle(forWritingTo: file.url)
+        try handle.seekToEnd()
+        try handle.write(contentsOf: Data("not json\n".utf8))
+        try handle.close()
+        try file.append(new)
+        #expect(file.load() == [old, new])
+        #expect(try file.prune(olderThan: Date(timeIntervalSince1970: 3_000)) == [new])
+        #expect(file.load() == [new])
+        try file.clear()
+        #expect(file.load().isEmpty)
+    }
+}

@@ -1,10 +1,10 @@
 #!/bin/zsh
-# Removes Murmur: the app, its login item, settings, your vocabulary file and its
-# privacy permissions.
+# Removes Murmur: the app, its login item, settings, your vocabulary file, dictation
+# history and its privacy permissions.
 #
 #   scripts/uninstall.sh          # asks before removing
 #   scripts/uninstall.sh --yes    # no questions
-#   scripts/uninstall.sh --keep-vocabulary
+#   scripts/uninstall.sh --keep-vocabulary   # keep vocabulary and history
 #
 # The "Murmur Dev" signing identity is left in your keychain; the end of the output
 # says how to delete it.
@@ -27,7 +27,7 @@ done
 echo "This removes:"
 echo "  • $APP"
 echo "  • Murmur's login item, settings and privacy permissions"
-(( keep_vocabulary )) || echo "  • $SUPPORT (your vocabulary file)"
+(( keep_vocabulary )) || echo "  • $SUPPORT (your vocabulary and dictation history)"
 if (( ! assume_yes )); then
   read -q "reply?Continue? [y/N] " || { echo; echo "Nothing removed."; exit 1; }
   echo

@@ -13,10 +13,20 @@ struct MenuContent: View {
         }
         if let text = dictation.lastTranscript {
             Divider()
-            Text("Last: \(text.count > 60 ? text.prefix(60) + "…" : text)")
-            Button("Copy Last Dictation") {
-                NSPasteboard.general.clearContents()
-                NSPasteboard.general.setString(text, forType: .string)
+            Text("Last: \(Self.menuTitle(text))")
+            Button("Copy Last Dictation") { Self.copy(text) }
+        }
+        let recent = dictation.history.recent.filter { !$0.text.isEmpty }
+        if !recent.isEmpty {
+            Menu("Recent Dictations") {
+                ForEach(recent) { entry in
+                    Button(Self.menuTitle(entry.text)) { Self.copy(entry.text) }
+                    if let app = entry.app {
+                        Text("\(app), \(entry.date.formatted(.relative(presentation: .named)))")
+                    }
+                }
+                Divider()
+                Button("Show History in Finder") { dictation.history.showInFinder() }
             }
         }
 
@@ -35,6 +45,15 @@ struct MenuContent: View {
         Button("Quit Murmur") { NSApp.terminate(nil) }
             .keyboardShortcut("q")
             .onAppear { permissions.refresh() }
+    }
+
+    private static func menuTitle(_ text: String) -> String {
+        text.count > 60 ? text.prefix(60) + "…" : text
+    }
+
+    private static func copy(_ text: String) {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(text, forType: .string)
     }
 
     private var status: String {
