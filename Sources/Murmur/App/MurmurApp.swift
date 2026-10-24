@@ -65,6 +65,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         if !model.permissions.allGranted { model.showSetup() }
+        model.status.start()
         if !CommandLine.arguments.contains("--test-dictation") { model.launchAtLogin.enableOnFirstLaunch() }
         Task { [model] in
             // Reserving an on-disk model is instant; a real download runs in the

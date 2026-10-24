@@ -15,12 +15,15 @@ enum CommandLineTool {
         switch args.first {
         case "--transcribe" where args.count >= 2:
             run { try await transcribe(URL(filePath: args[1])) }
+        case "--status":
+            printStatus()
         case "--unregister-login-item":
             run { try await SMAppService.mainApp.unregister() }
         case "--help", "-h":
             print("""
-                usage: Murmur [--transcribe FILE | --unregister-login-item]
+                usage: Murmur [--transcribe FILE | --status | --unregister-login-item]
                   --transcribe FILE          print what Murmur would type for an audio file
+                  --status                   ask the running app for its status (mic, state) as JSON
                   --unregister-login-item    remove Murmur from login items
                 Without arguments, starts the menu bar app.
                 """)
@@ -43,6 +46,24 @@ enum CommandLineTool {
             }
         }
         dispatchMain()
+    }
+
+    /// Asks the running app the way another app would, and prints its answer.
+    private static func printStatus() {
+        var reply: [AnyHashable: Any]?
+        let center = DistributedNotificationCenter.default()
+        let token = center.addObserver(forName: StatusBroadcaster.statusName, object: nil, queue: nil) {
+            reply = $0.userInfo
+        }
+        center.postNotificationName(StatusBroadcaster.requestName, object: nil, userInfo: nil, deliverImmediately: true)
+        let deadline = Date.now.addingTimeInterval(2)
+        while reply == nil, Date.now < deadline { RunLoop.current.run(until: .now.addingTimeInterval(0.05)) }
+        center.removeObserver(token)
+        guard let reply, let data = try? JSONSerialization.data(withJSONObject: reply, options: [.prettyPrinted, .sortedKeys]) else {
+            FileHandle.standardError.write(Data("Murmur isn't running.\n".utf8))
+            exit(1)
+        }
+        print(String(decoding: data, as: UTF8.self))
     }
 
     /// Same recognizer, vocabulary and formatting as a dictation. Prints the raw

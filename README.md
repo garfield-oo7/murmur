@@ -51,6 +51,31 @@ It quits Murmur, removes the login item, the app, its settings, your vocabulary 
 - Murmur **opens at login** (turn it off in Settings, or in System Settings → General → Login Items).
 - **Settings…** in the menu: change the shortcut, pick the microphone (Automatic by default: a wired headset like EarPods when plugged in, otherwise the built-in mic; never AirPods, so they aren't switched into call mode), choose how text is inserted, turn sounds or the waveform off, and set how strongly the bars react.
 
+## For other apps
+
+Murmur tells other apps on your Mac (like TouchDeck) which microphone it uses and whether it's dictating, through distributed notifications. No permissions are needed.
+
+- **`io.github.garfield-oo7.Murmur.status`**: Murmur posts this whenever something changes. Its `userInfo` holds strings:
+  - `state`: `idle`, `listening` or `transcribing`
+  - `microphoneName`: e.g. "EarPods Microphone"
+  - `microphoneUID`: the CoreAudio device UID
+  - `microphoneSetting`: `auto`, `builtin`, `system` or a device UID
+  - `version`: `1`
+- **`io.github.garfield-oo7.Murmur.requestStatus`**: post this and Murmur replies with a status notification. Use it when your app starts.
+
+The microphone is the one Murmur would record from if you pressed the shortcut now. While a dictation is running, it's the one in use.
+
+```swift
+let center = DistributedNotificationCenter.default()
+center.addObserver(forName: .init("io.github.garfield-oo7.Murmur.status"), object: nil, queue: .main) { note in
+    let info = note.userInfo as? [String: String] ?? [:]
+    print(info["state"] ?? "", info["microphoneName"] ?? "")
+}
+center.postNotificationName(.init("io.github.garfield-oo7.Murmur.requestStatus"), object: nil, userInfo: nil, deliverImmediately: true)
+```
+
+From a terminal: `~/Applications/Murmur.app/Contents/MacOS/Murmur --status` prints the same information as JSON.
+
 ## Vocabulary format
 
 `Resources/Vocabulary.txt` is the bundled list; your own file at `~/Library/Application Support/Murmur/Vocabulary.txt` uses the same format:

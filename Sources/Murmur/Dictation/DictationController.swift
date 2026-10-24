@@ -14,7 +14,10 @@ final class DictationController {
         case finalizing
     }
 
-    private(set) var state = State.idle
+    private(set) var state = State.idle {
+        didSet { if state != oldValue { onStateChange?(state) } }
+    }
+    @ObservationIgnored var onStateChange: ((State) -> Void)?
     private(set) var lastTranscript: String?
     private(set) var lastError: String?
 

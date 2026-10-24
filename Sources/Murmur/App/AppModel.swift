@@ -9,6 +9,7 @@ final class AppModel {
     let hotkey = HotkeyManager()
     let dictation = DictationController()
     let launchAtLogin = LaunchAtLogin()
+    @ObservationIgnored private(set) lazy var status = StatusBroadcaster(dictation: dictation)
 
     // An AppKit-owned window rather than a SwiftUI `Window` scene: a menu bar app
     // launched in the background doesn't reliably get scene windows on screen.
