@@ -44,6 +44,11 @@ final class DictationController {
 
         let session = DictationSession(pressedAt: pressedAt, testAudio: testAudio)
         self.session = session
+        // The mic needs ~0.25 s to deliver audio; the sound means "go ahead and speak".
+        session.onMicLive = { [weak self, weak session] in
+            guard let self, let session, self.session === session, self.state != .idle else { return }
+            Sound.start.play()
+        }
         startTask = Task {
             do {
                 try await session.start()
@@ -54,12 +59,7 @@ final class DictationController {
                 return false
             }
             // Released or cancelled while the mic was starting: those paths take over.
-            if self.session === session, self.state == .starting {
-                self.state = .listening
-                // Only now is the mic live (~0.25 s after the press), so the sound
-                // doubles as "go ahead and speak".
-                Sound.start.play()
-            }
+            if self.session === session, self.state == .starting { self.state = .listening }
             return true
         }
     }

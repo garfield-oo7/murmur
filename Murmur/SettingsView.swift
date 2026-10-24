@@ -64,6 +64,7 @@ private struct ShortcutRecorder: View {
     private func start() {
         message = nil
         isRecording = true
+        hotkey.suspend()
         monitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
             let code = Int(event.keyCode)
             if code == kVK_Escape {
@@ -90,5 +91,6 @@ private struct ShortcutRecorder: View {
         if let monitor { NSEvent.removeMonitor(monitor) }
         monitor = nil
         isRecording = false
+        hotkey.resume() // no-op if apply() already registered the new shortcut
     }
 }

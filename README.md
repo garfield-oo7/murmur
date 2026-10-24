@@ -23,6 +23,13 @@ Murmur lives in the menu bar (no Dock icon). On first launch a setup window asks
 
 macOS ties those permissions to the app's code signature. `build.sh` signs every build with the same local certificate, so permissions survive rebuilds. Without the certificate it signs ad-hoc, and you have to re-grant Accessibility after each build. You can open `Murmur.xcodeproj` in Xcode too, but builds run from Xcode are ad-hoc signed, so use the script when you need working permissions.
 
+## Using Murmur
+
+- **Hold ⌥D** (Option+D) in any app. Start speaking after the soft *tink*: that's when the mic is live.
+- **Let go** to finish. A *pop* means the text is ready. For now it appears in Murmur's menu (🎙 in the menu bar) with **Copy Last Dictation**. Typing it into the app you're using is the next milestone.
+- **Esc** while holding cancels. A very short tap does nothing.
+- **Settings…** in the menu: change the shortcut, pick the microphone (built-in by default, so AirPods aren't hijacked), turn sounds off.
+
 ## Repo layout
 - `Murmur/`, `Murmur.xcodeproj`, `Config/`: the menu bar app
 - `scripts/`: build and signing helpers

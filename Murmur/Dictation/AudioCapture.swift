@@ -23,18 +23,27 @@ nonisolated final class InputPipe: Sendable {
     let stream: AsyncStream<AnalyzerInput>
     private let continuation: AsyncStream<AnalyzerInput>.Continuation
     private let state = Mutex(Stats())
+    private let firstBufferHandler = Mutex<(@Sendable () -> Void)?>(nil)
+
+    /// Called once, from the capture thread, when the first audio arrives.
+    func onFirstBuffer(_ handler: @escaping @Sendable () -> Void) {
+        firstBufferHandler.withLock { $0 = handler }
+    }
 
     init() {
         (stream, continuation) = AsyncStream.makeStream(of: AnalyzerInput.self, bufferingPolicy: .unbounded)
     }
 
     func yield(_ input: AnalyzerInput) {
-        state.withLock {
+        let isFirst = state.withLock {
             $0.buffers += 1
             $0.seconds += input.bufferDuration.seconds
-            if $0.firstAt == nil { $0.firstAt = .now }
+            guard $0.firstAt == nil else { return false }
+            $0.firstAt = .now
+            return true
         }
         continuation.yield(input)
+        if isFirst, let handler = firstBufferHandler.withLock({ $0.take() }) { handler() }
     }
 
     func markUpstreamEnded() { state.withLock { $0.upstreamEnded = true } }

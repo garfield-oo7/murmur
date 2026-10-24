@@ -154,6 +154,11 @@ final class HotkeyManager {
         }
     }
 
+    /// Temporarily releases the shortcut, e.g. while recording a new one in Settings so
+    /// pressing the current combo doesn't start a dictation.
+    func suspend() { unregisterMain() }
+    func resume() { register() }
+
     private func unregisterMain() {
         if let hotKeyRef { UnregisterEventHotKey(hotKeyRef) }
         hotKeyRef = nil

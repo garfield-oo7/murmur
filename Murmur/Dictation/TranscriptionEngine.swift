@@ -76,6 +76,9 @@ final class DictationSession {
         self.testAudio = testAudio
     }
 
+    /// Called on the main actor when the microphone delivers its first audio.
+    var onMicLive: (() -> Void)?
+
     func start() async throws {
         guard await AssetInventory.status(forModules: [module]) == .installed else {
             throw DictationError.modelNotInstalled
@@ -129,12 +132,12 @@ final class DictationSession {
     private func startCapture() async throws -> any AudioSource {
         if let testAudio {
             let file = FileSource(module: module, url: testAudio)
-            try await file.start()
+            try await begin(file)
             return file
         }
         let capture = CaptureSource(module: module)
         do {
-            try await capture.start()
+            try await begin(capture)
             return capture
         } catch {
             // e.g. SFSpeechError.cannotConfigureAudioSystem; fall back to AVAudioEngine.
@@ -142,9 +145,17 @@ final class DictationSession {
                 .error("capture provider failed (\(error, privacy: .public)); using AVAudioEngine")
             await capture.stop()
             let engine = EngineSource(module: module)
-            try await engine.start()
+            try await begin(engine)
             return engine
         }
+    }
+
+    private func begin(_ source: some AudioSource) async throws {
+        if let onMicLive {
+            let live = Unchecked(value: onMicLive)
+            source.pipe.onFirstBuffer { Task { @MainActor in live.value() } }
+        }
+        try await source.start()
     }
 
     private func recordStats() {
