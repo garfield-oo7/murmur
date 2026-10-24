@@ -83,18 +83,11 @@ final class CaptureSource: AudioSource {
             await Task.detached { box.value.captureSession.stopRunning() }.value
         }
         // Give in-flight buffers a moment to arrive, then end the stream regardless of
-        // whether the provider's sequence terminates on stopRunning().
-        if let forward {
-            let drained = await withTaskGroup(of: Bool.self) { group in
-                group.addTask { await forward.value; return true }
-                group.addTask { try? await Task.sleep(for: .milliseconds(150)); return false }
-                let first = await group.next()!
-                group.cancelAll()
-                return first
-            }
-            if !drained { forward.cancel() }
-        }
+        // whether the provider's sequence terminates on stopRunning(). Don't await the
+        // forward task: if the sequence never ends, that await would never return.
+        try? await Task.sleep(for: .milliseconds(150))
         pipe.finish()
+        forward?.cancel()
     }
 }
 
