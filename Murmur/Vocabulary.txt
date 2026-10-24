@@ -3197,3 +3197,4 @@ garfield-oo7
 LangGraph | land graph
 kubectl | cube control | cube cuddle | kube control
 Postgres | post gress | post grass
+Murmur | mural | murals
