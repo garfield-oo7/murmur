@@ -20,8 +20,9 @@ final class SpeechModel {
     let locale = Locale(identifier: "en-US")
     private static let log = Logger(subsystem: "io.github.garfield-oo7.Murmur", category: "speech-model")
 
-    private func makeModule() -> SpeechTranscriber {
-        SpeechTranscriber(locale: locale, preset: .transcription)
+    /// Both engines, so switching in Settings never needs another download.
+    private func makeModules() -> [any SpeechModule] {
+        TranscriptionEngine.Kind.allCases.map { TranscriptionEngine.makeModule($0) }
     }
 
     func refresh() async {
@@ -31,7 +32,7 @@ final class SpeechModel {
             return
         }
         if case .downloading = state { return }
-        switch await AssetInventory.status(forModules: [makeModule()]) {
+        switch await AssetInventory.status(forModules: makeModules()) {
         case .installed: state = .ready
         case .unsupported: state = .unsupported
         case .supported, .downloading: state = .needsDownload
@@ -43,7 +44,7 @@ final class SpeechModel {
         if case .downloading = state { return }
         state = .downloading(0)
         do {
-            if let request = try await AssetInventory.assetInstallationRequest(supporting: [makeModule()]) {
+            if let request = try await AssetInventory.assetInstallationRequest(supporting: makeModules()) {
                 let progress = request.progress
                 let ticker = Task {
                     while !Task.isCancelled {

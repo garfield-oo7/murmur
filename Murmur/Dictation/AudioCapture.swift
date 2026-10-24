@@ -18,6 +18,11 @@ nonisolated final class InputPipe: Sendable {
         var firstAt: ContinuousClock.Instant?
         /// The upstream sequence ended by itself (vs. us cutting it off).
         var upstreamEnded = false
+        /// Audio timestamp of the first buffer, if the source provides one.
+        var firstStartTime: CMTime?
+        /// Everything yielded, kept so a failed analysis can be replayed into a fresh
+        /// analyzer (~2 MB per minute at 16 kHz).
+        var inputs: [AnalyzerInput] = []
     }
 
     let stream: AsyncStream<AnalyzerInput>
@@ -38,8 +43,10 @@ nonisolated final class InputPipe: Sendable {
         let isFirst = state.withLock {
             $0.buffers += 1
             $0.seconds += input.bufferDuration.seconds
+            $0.inputs.append(input)
             guard $0.firstAt == nil else { return false }
             $0.firstAt = .now
+            $0.firstStartTime = input.bufferStartTime
             return true
         }
         continuation.yield(input)

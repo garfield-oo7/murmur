@@ -55,6 +55,16 @@ struct CLI {
                                       options: .init(priority: .userInitiated, modelRetention: .processLifetime))
         let format = await SpeechAnalyzer.bestAvailableAudioFormat(compatibleWith: [module])
         if let format { log("analyzer format: \(Int(format.sampleRate)) Hz, \(format.channelCount) ch, \(format.commonFormat.rawValue)") }
+        if let path = o.vocabPath {
+            let terms = try String(contentsOfFile: path, encoding: .utf8)
+                .split(separator: "\n")
+                .map { $0.split(separator: "|").first.map(String.init)?.trimmingCharacters(in: .whitespaces) ?? "" }
+                .filter { !$0.isEmpty && !$0.hasPrefix("#") }
+            let context = AnalysisContext()
+            context.contextualStrings[.general] = terms
+            try await analyzer.setContext(context)
+            log("vocabulary: \(terms.count) terms")
+        }
         t = .now
         try await analyzer.prepareToAnalyze(in: format)
         r.prepare = ContinuousClock.now - t

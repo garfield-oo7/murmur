@@ -16,13 +16,13 @@ final class FlowPill {
     static let enabledKey = "showPill"
 
     enum Position: String, CaseIterable, Identifiable {
-        case center, bottom
+        case bottom, center
         var id: String { rawValue }
         var title: String { self == .center ? "Center of screen" : "Bottom of screen" }
 
         static let key = "pillPosition"
         static var current: Position {
-            UserDefaults.standard.string(forKey: key).flatMap(Position.init) ?? .center
+            UserDefaults.standard.string(forKey: key).flatMap(Position.init) ?? .bottom
         }
     }
 

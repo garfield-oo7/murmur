@@ -7,9 +7,10 @@ struct SettingsView: View {
     let model: AppModel
     @AppStorage("playSounds") private var playSounds = true
     @AppStorage(FlowPill.enabledKey) private var showPill = true
-    @AppStorage(FlowPill.Position.key) private var pillPosition = FlowPill.Position.center.rawValue
+    @AppStorage(FlowPill.Position.key) private var pillPosition = FlowPill.Position.bottom.rawValue
     @AppStorage(LevelMeter.sensitivityKey) private var sensitivity = 0.5
     @AppStorage(Microphone.defaultsKey) private var microphone = Microphone.builtIn
+    @AppStorage(TranscriptionEngine.Kind.key) private var engine = TranscriptionEngine.Kind.dictation.rawValue
     @AppStorage(TextInserter.methodKey) private var insertionMethod = TextInserter.Method.paste.rawValue
 
     var body: some View {
@@ -29,6 +30,14 @@ struct SettingsView: View {
                 if !others.isEmpty {
                     Divider()
                     ForEach(others, id: \.uniqueID) { Text($0.localizedName).tag($0.uniqueID) }
+                }
+            }
+            Picker("Recognition", selection: $engine) {
+                ForEach(TranscriptionEngine.Kind.allCases) { Text($0.title).tag($0.rawValue) }
+            }
+            LabeledContent("Vocabulary") {
+                Button("Edit My Vocabulary…") {
+                    if let url = try? Vocabulary.ensureUserFile() { NSWorkspace.shared.open(url) }
                 }
             }
             Picker("Insert text by", selection: $insertionMethod) {

@@ -28,6 +28,8 @@ final class DictationController {
 
     /// Mic loudness, shared with the pill.
     let meter = LevelMeter()
+    /// Analyzer with the vocabulary compiled in, reused across dictations.
+    @ObservationIgnored let recognizer = PersistentRecognizer()
     @ObservationIgnored let pill: FlowPill
 
     init() {
@@ -54,7 +56,7 @@ final class DictationController {
         meter.reset()
         pill.listening()
 
-        let session = DictationSession(pressedAt: pressedAt, meter: meter, testAudio: testAudio)
+        let session = DictationSession(pressedAt: pressedAt, recognizer: recognizer, meter: meter, testAudio: testAudio)
         self.session = session
         // The mic needs ~0.25 s to deliver audio; the sound and the bars coming alive
         // mean "go ahead and speak".
@@ -115,6 +117,8 @@ final class DictationController {
                 self.fail(message: error.localizedDescription)
             }
             if self.session === session { self.reset() }
+            // Pick up vocabulary edits for next time (no-op if unchanged).
+            await self.recognizer.prepare(vocabulary: .load())
         }
     }
 
@@ -170,6 +174,8 @@ final class DictationController {
             audio \(t.audioSeconds, format: .fixed(precision: 2), privacy: .public)s in \(t.buffers, privacy: .public) buffers, \
             drain ended early \(t.drainEndedEarly, privacy: .public), \
             mic peak \(self.meter.peakDB, format: .fixed(precision: 1), privacy: .public) dBFS, \
+            shared analyzer \(t.sharedAnalyzer, privacy: .public), \
+            first timestamp \(t.firstTimestamp ?? -1, format: .fixed(precision: 3), privacy: .public)s, \
             release→text \(ms(t.releaseToText), privacy: .public)
             """)
     }

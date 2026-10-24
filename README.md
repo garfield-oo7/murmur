@@ -31,6 +31,7 @@ macOS ties those permissions to the app's code signature. `build.sh` signs every
 - Password fields (and Terminal with Secure Keyboard Entry) block typed input on purpose. Murmur then leaves the text in its menu.
 - While you hold the shortcut, a small **waveform pill** at the bottom of the screen shows Murmur is listening. Its bars follow your voice, then shimmer while the text is produced. It never takes focus from your app.
 - **Esc** while holding cancels (the pill shakes). A very short tap does nothing.
+- **Vocabulary:** Murmur knows about 4,000 AI-engineering names (models from every major lab, tools, people, companies) from `Murmur/Vocabulary.txt`, and spells them exactly: "tail scale" → Tailscale, "deep seek v3" → DeepSeek-V3, "cube control" → kubectl. Add your own with **Settings → Edit My Vocabulary…** (same format; the changes apply after your next dictation).
 - **Settings…** in the menu: change the shortcut, pick the microphone (built-in by default, so AirPods aren't hijacked), choose how text is inserted, turn sounds or the waveform off, and set how strongly the bars react.
 
 ## Repo layout

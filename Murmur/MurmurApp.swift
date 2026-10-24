@@ -20,7 +20,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         if !model.permissions.allGranted { model.showSetup() }
-        Task { await TranscriptionEngine.prewarm() }
+        Task { [model] in
+            // Reserving an on-disk model is instant; a real download runs in the
+            // background and shows progress in the setup window.
+            await model.speechModel.refresh()
+            if model.speechModel.state == .needsDownload { await model.speechModel.install() }
+            await TranscriptionEngine.prewarm()
+            // Compiling the full vocabulary takes a few seconds; dictations before it's
+            // ready use a fresh analyzer with a short list.
+            await model.dictation.recognizer.prepare(vocabulary: .load())
+        }
         runSelfTestIfRequested()
     }
 
@@ -37,11 +46,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if let j = args.firstIndex(of: "--test-audio"), j + 1 < args.count {
             dictation.testAudio = URL(fileURLWithPath: args[j + 1])
         }
+        var repeats = 1
+        if let k = args.firstIndex(of: "--test-repeat"), k + 1 < args.count { repeats = Int(args[k + 1]) ?? 1 }
         Task {
-            try? await Task.sleep(for: .seconds(1)) // let prewarm finish
-            dictation.keyDown()
-            try? await Task.sleep(for: .seconds(seconds))
-            dictation.keyUp()
+            try? await Task.sleep(for: .seconds(6)) // let launch prep (model, vocabulary) finish
+            for i in 0..<repeats {
+                if i > 0 { try? await Task.sleep(for: .seconds(20)) }
+                dictation.keyDown()
+                try? await Task.sleep(for: .seconds(seconds))
+                dictation.keyUp()
+            }
         }
     }
 }

@@ -23,6 +23,7 @@ struct Options {
     var runs = 1
     var fast = false
     var realtime = true
+    var vocabPath: String?
 
     static let usage = """
     usage: murmur-cli [options]
@@ -35,6 +36,7 @@ struct Options {
       --runs N                       repeat the session N times (cold vs warm latency)
       --fast                         SpeechTranscriber .fastResults reporting
       --no-realtime                  feed files as fast as possible instead of in real time
+      --vocab FILE                   bias recognition with a Murmur vocabulary file
       -h, --help                     show this help
     """
 
@@ -70,6 +72,8 @@ struct Options {
                 o.fast = true
             case "--no-realtime":
                 o.realtime = false
+            case "--vocab":
+                o.vocabPath = try value(arg)
             case "-h", "--help":
                 print(usage)
                 exit(0)
