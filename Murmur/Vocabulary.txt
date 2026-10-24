@@ -22,34 +22,9 @@
 ## Anthropic: Claude models
 Anthropic
 Claude
-Claude 1
-Claude 1.3
-Claude Instant
-Claude Instant 1.2
-Claude 2
-Claude 2.1
-Claude 3
 Claude Haiku
 Claude Sonnet
 Claude Opus
-Claude 3 Haiku
-Claude 3 Sonnet
-Claude 3 Opus
-Claude Haiku 3
-Claude Sonnet 3
-Claude Opus 3
-Claude 3.5
-Claude 3.5 Sonnet
-Claude 3.5 Haiku
-Claude Sonnet 3.5
-Claude Haiku 3.5
-Claude 3.7
-Claude 3.7 Sonnet
-Claude Sonnet 3.7
-Claude 4
-Claude Sonnet 4
-Claude Opus 4
-Claude Opus 4.1
 Claude Sonnet 4.5
 Claude Haiku 4.5
 Claude Opus 4.5
@@ -105,39 +80,6 @@ Agentic AI Foundation
 ## OpenAI: GPT models
 OpenAI
 GPT
-GPT-1
-GPT-2
-GPT-3
-InstructGPT
-GPT-3.5
-GPT-3.5 Turbo
-GPT-4
-GPT-4 Turbo
-GPT-4V
-GPT-4o
-GPT-4o mini
-ChatGPT-4o
-GPT-4.5
-GPT-4.1
-GPT-4.1 mini
-GPT-4.1 nano
-GPT-5
-GPT-5 mini
-GPT-5 nano
-GPT-5 Pro
-GPT-5 Chat
-GPT-5.1
-GPT-5.1 Chat
-GPT-5.2
-GPT-5.2 Pro
-GPT-5.2 Chat
-GPT-5.3 Chat
-GPT-5.4
-GPT-5.4 Pro
-GPT-5.4 mini
-GPT-5.4 nano
-GPT-5.5
-GPT-5.5 Pro
 GPT-5.6 Sol
 GPT-5.6 Terra
 GPT-5.6 Luna
@@ -150,29 +92,8 @@ GPT-6.1 Sol
 GPT-Rosalind
 GPT-Live 1
 
-## OpenAI: Reasoning models
-o1
-o1-preview
-o1-mini
-o1-pro
-o3
-o3-mini
-o3-pro
-o3-deep-research
-o4-mini
-o4-mini-deep-research
-
 ## OpenAI: Codex
 Codex
-codex-mini
-GPT-5-Codex
-GPT-5-Codex-Mini
-GPT-5.1-Codex
-GPT-5.1-Codex-Max
-GPT-5.1-Codex-Mini
-GPT-5.2-Codex
-GPT-5.3-Codex
-GPT-5.3-Codex-Spark
 Codex CLI
 Codex Cloud
 Codex app
@@ -641,133 +562,11 @@ NeMo
 Isaac Sim
 
 ## Cohere: Models
-Cohere
-Command
-Command R
-Command R+
-Command R7B
-Command A
-Command A Vision
-Command A Reasoning
-Command A Translate
-Command A+
-Aya
-Aya 23
-Aya Expanse
-Aya Vision
-Tiny Aya
-Embed v3
-Embed 4
-Embed 5
 Rerank
 Rerank 3
 Rerank 3.5
 Rerank 4
 Rerank 5
-Cohere Transcribe
-North
-
-## AI21: Models
-AI21 Labs
-Jurassic
-Jamba
-Jamba 1.5
-Jamba 1.6
-Jamba 1.7
-Jamba Reasoning 3B
-Jamba2
-Maestro
-
-## IBM: Granite
-IBM Granite
-Granite
-Granite 3.0
-Granite 3.1
-Granite 3.2
-Granite 3.3
-Granite 4.0
-Granite 4.1
-Granite 4.2
-Granite Guardian
-Granite Docling
-watsonx
-
-## Allen AI: Open models
-Ai2
-Allen Institute for AI
-Olmo
-OLMoE
-OLMo 2
-Olmo 3
-Olmo 3.1
-Tülu
-Tülu 3
-Molmo
-Molmo 2
-Asta
-
-## Perplexity: Models and products
-Perplexity
-Sonar
-Sonar Pro
-Sonar Reasoning
-Sonar Reasoning Pro
-Sonar Deep Research
-R1 1776
-Comet
-Perplexity Computer
-
-## Liquid AI: Models
-Liquid AI
-LFM
-LFM2
-LFM2-VL
-LFM2-Audio
-LFM2.5
-LEAP
-
-## Reka: Models
-Reka
-Reka Core
-Reka Flash
-Reka Edge
-Reka Flash 3
-
-## Inflection: Models
-Inflection AI
-Inflection-1
-Inflection-2
-Inflection-2.5
-Pi
-
-## Stability AI: Models
-Stability AI
-Stable Diffusion
-Stable Diffusion 1.5
-Stable Diffusion 2.1
-SDXL
-SDXL Turbo
-Stable Diffusion 3
-Stable Diffusion 3.5
-Stable Video Diffusion
-Stable Audio
-Stable Audio 2.5
-Stable Audio 3.0
-
-## Black Forest Labs: FLUX
-Black Forest Labs
-FLUX
-FLUX.1
-FLUX.1 [pro]
-FLUX.1 [dev]
-FLUX.1 [schnell]
-FLUX1.1 [pro]
-FLUX1.1 [pro] Ultra
-FLUX.1 Kontext
-FLUX.2
-FLUX.2 Max
-FLUX.2 Klein
-FLUX 3
 
 ## Midjourney: Models
 Midjourney
@@ -814,10 +613,6 @@ Suno v5.5
 Suno v6
 Suno Studio
 
-## Character.AI: Products
-Character.AI
-AvatarFX
-
 ## Thinking Machines: Products
 Thinking Machines Lab
 Thinking Machines
@@ -828,9 +623,6 @@ Inkling
 Safe Superintelligence
 SSI
 
-## Reflection AI: Company
-Reflection AI
-
 ## Hugging Face: SmolLM
 Hugging Face
 SmolLM
@@ -838,28 +630,6 @@ SmolLM2
 SmolLM3
 SmolVLM
 SmolVLM2
-
-## TII: Falcon
-Technology Innovation Institute
-Falcon
-Falcon 2
-Falcon 3
-Falcon-H1
-Falcon-H1R
-Falcon Arabic
-
-## Aleph Alpha: Models
-Aleph Alpha
-Luminous
-Pharia
-PhariaAI
-
-## Sakana AI: Research and products
-Sakana AI
-The AI Scientist
-Darwin Gödel Machine
-ShinkaEvolve
-Sakana Fugu
 
 # ======================================================================
 # Model labs: China & Asia
@@ -872,46 +642,6 @@ DeepSeek API
 DeepSeek Platform
 
 ## DeepSeek: Models
-DeepSeek Coder
-DeepSeek LLM
-DeepSeekMoE
-DeepSeekMath
-DeepSeek-VL
-DeepSeek-V2
-DeepSeek-V2-Lite
-DeepSeek-Coder-V2
-DeepSeek-Coder-V2-Lite
-DeepSeek-Prover
-DeepSeek-Prover-V1.5
-DeepSeek-V2.5
-Janus
-JanusFlow
-DeepSeek-V2.5-1210
-DeepSeek-VL2
-DeepSeek-V3
-DeepSeek-R1
-DeepSeek-R1-Zero
-DeepSeek-R1-Distill
-DeepSeek-R1-Distill-Qwen-1.5B
-DeepSeek-R1-Distill-Qwen-7B
-DeepSeek-R1-Distill-Qwen-14B
-DeepSeek-R1-Distill-Qwen-32B
-DeepSeek-R1-Distill-Llama-8B
-DeepSeek-R1-Distill-Llama-70B
-Janus-Pro
-Janus-Pro-7B
-DeepSeek-V3-0324
-DeepSeek-Prover-V2
-DeepSeek-R1-0528
-DeepSeek-R1-0528-Qwen3-8B
-DeepSeek-V3.1
-DeepSeek-V3.1-Terminus
-DeepSeek-V3.2-Exp
-DeepSeek-OCR
-DeepSeek-Math-V2
-DeepSeek-V3.2-Speciale
-DeepSeek-V3.2
-DeepSeek-OCR-2
 DeepSeek-V4
 DeepSeek-V4-Pro
 DeepSeek-V4-Flash
@@ -936,63 +666,10 @@ DeepSeek Sparse Attention
 
 ## Alibaba: Qwen LLMs
 Qwen
-Qwen-7B
-Qwen-14B
-Qwen-72B
-Qwen1.5
-Qwen1.5-MoE-A2.7B
-Qwen1.5-32B
-Qwen1.5-110B
-CodeQwen1.5
 Qwen-Max
 Qwen-Plus
 Qwen-Turbo
-Qwen2
-Qwen2-72B
-Qwen2-57B-A14B
-Qwen2-Math
-Qwen2.5
-Qwen2.5-72B-Instruct
-Qwen2.5-32B-Instruct
-Qwen2.5-14B-Instruct
-Qwen2.5-7B-Instruct
-Qwen2.5-Math
-Qwen2.5-Coder
-Qwen2.5-Coder-32B-Instruct
-Qwen2.5-Turbo
-QwQ
-QwQ-32B-Preview
-Qwen2.5-1M
-Qwen2.5-Max
-QwQ-Max-Preview
-QwQ-32B
-Qwen3
-Qwen3-0.6B
-Qwen3-1.7B
-Qwen3-4B
-Qwen3-8B
-Qwen3-14B
-Qwen3-32B
-Qwen3-30B-A3B
-Qwen3-235B-A22B
-Qwen3-235B-A22B-Instruct-2507
-Qwen3-Coder
-Qwen3-Coder-480B-A35B-Instruct
-Qwen3-235B-A22B-Thinking-2507
-Qwen3-30B-A3B-Instruct-2507
-Qwen3-30B-A3B-Thinking-2507
-Qwen3-Coder-30B-A3B-Instruct
-Qwen3-Coder-Flash
-Qwen3-4B-Instruct-2507
-Qwen3-4B-Thinking-2507
 Qwen-Flash
-Qwen3-Next
-Qwen3-Next-80B-A3B
-Qwen3-Next-80B-A3B-Instruct
-Qwen3-Next-80B-A3B-Thinking
-Qwen3-Max
-Qwen3-Max-Thinking
-Qwen3-Coder-Next
 Qwen3.5
 Qwen3.5-Plus
 Qwen3.5-397B-A17B
@@ -1024,43 +701,6 @@ Qwen3.8-Flash
 Qwen3.8-Max-0902
 
 ## Alibaba: Qwen multimodal and speech
-Qwen-VL
-Qwen-Audio
-Qwen2-Audio
-Qwen2-VL
-Qwen2-VL-72B-Instruct
-QVQ
-QVQ-72B-Preview
-Qwen2.5-VL
-Qwen2.5-VL-72B-Instruct
-Qwen2.5-VL-32B-Instruct
-Qwen2.5-Omni
-Qwen2.5-Omni-7B
-QVQ-Max
-Qwen-TTS
-Qwen-MT
-Qwen3-VL
-Qwen3-VL-235B-A22B
-Qwen3-VL-30B-A3B
-Qwen3-VL-32B
-Qwen3-VL-8B
-Qwen3-VL-Plus
-Qwen3-Omni
-Qwen3-Omni-30B-A3B
-Qwen3-Omni-30B-A3B-Captioner
-Qwen3-Omni-Flash
-Qwen3-ASR-Flash
-Qwen3-TTS-Flash
-Qwen3-LiveTranslate-Flash
-Qwen-OCR
-Qwen-MT-Image
-Qwen3-VL-Embedding
-Qwen3-VL-Reranker
-Qwen3-TTS
-Qwen3-ASR
-Qwen3-ASR-1.7B
-Qwen3-ASR-0.6B
-Qwen3-ForcedAligner
 Qwen3.5-Omni
 Qwen3.5-Omni-Plus
 Qwen3.5-Omni-Flash
@@ -1076,10 +716,6 @@ Qwen-Drive-1.0
 
 ## Alibaba: Qwen specialized models
 Qwen-Agent
-WorldPM-72B
-Qwen3-Embedding
-Qwen3-Reranker
-Qwen3Guard
 Qwen-Deep-Research
 WebWorld
 Qwen-AgentWorld
@@ -1087,39 +723,12 @@ Qwen-AgentWorld-35B-A3B
 
 ## Alibaba: Wan and image
 Wan
-Wan2.1
-Wan2.1-T2V-14B
-Wan2.1-T2V-1.3B
-Wan2.1-I2V-14B
-Wan2.1-FLF2V
-Wan2.1-VACE
-Qwen VLo
-Wan2.2
-Wan2.2-T2V-A14B
-Wan2.2-I2V-A14B
-Wan2.2-TI2V-5B
 Qwen-Image
-Qwen-Image-Edit
-Wan2.2-S2V
-Wan-Animate
-Wan2.2-Animate
-Wan2.5
-Wan2.5-Preview
-Qwen-Image-Edit-2509
-Z-Image
-Z-Image-Turbo
-Qwen-Image-Edit-2511
-Qwen-Image-Layered
-Wan2.6
-Qwen-Image-2512
-Qwen-Image-2.0
-Qwen-Image-2.0-Pro
 Wan2.7
 Wan2.7-Image
 Wan2.7-Image-Pro
 Wan-Dancer
 Wan-Animate-2
-Wan2.2-Animate-2
 Qwen-Image-2.1
 Qwen-Image-2.1-Pro
 Qwen-Image-2.1-Turbo
@@ -1156,25 +765,6 @@ Qwen Cloud
 ## Moonshot AI: Kimi models
 Moonshot AI
 Kimi
-Kimi Chat
-Kimi k1.5
-Moonlight
-Moonlight-16B-A3B
-Kimi-VL
-Kimi-VL-A3B-Thinking
-MoonViT
-Kimi-Audio
-Kimina-Prover
-Kimi-Dev
-Kimi-Dev-72B
-Kimi K2
-Kimi-K2-Instruct
-MuonClip
-Kimi-K2-Instruct-0905
-Kimi Linear
-Kimi-Linear-48B-A3B
-Kimi Delta Attention
-Kimi K2 Thinking
 Kimi K2.5
 Kimi K2.6
 Kimi K2.7 Code
@@ -1193,34 +783,6 @@ Zhipu AI
 Zhipu
 Z.ai
 GLM
-GLM-130B
-ChatGLM
-ChatGLM-6B
-ChatGLM2-6B
-ChatGLM3-6B
-GLM-4
-GLM-4-9B
-GLM-4V
-GLM-4-Voice
-GLM-4-Plus
-GLM-4-Flash
-GLM-Edge
-GLM-4-32B-0414
-GLM-Z1
-GLM-Z1-Rumination
-GLM-4.1V-Thinking
-GLM-4.5
-GLM-4.5-Air
-GLM-4.5V
-GLM-4.6
-GLM-4.6V
-GLM-4.6V-Flash
-GLM-ASR
-GLM-TTS
-GLM-4.7
-GLM-Image
-GLM-4.7-Flash
-GLM-OCR
 GLM-5
 GLM-5.1
 GLM-5.2
@@ -1228,40 +790,12 @@ GLM-5.3
 GLM-5.3-Flash
 
 ## Zhipu AI: Vision, video, code and agents
-CogVLM
-CogAgent
-CogVLM2
-CodeGeeX
-CodeGeeX2
-CodeGeeX4
-CogView
-CogView3-Plus
-CogView4
-CogVideo
-CogVideoX
-CogVideoX1.5
-LongWriter
 AutoGLM
-AutoGLM Rumination
-Glyph
-SCAIL
 Zhipu Qingyan
 GLM Coding Plan
 
 ## MiniMax: Models
 MiniMax
-abab
-abab5.5
-abab6
-abab6.5
-abab6.5s
-MiniMax-Text-01
-MiniMax-VL-01
-MiniMax-01
-Lightning Attention
-MiniMax-M1
-MiniMax-M2
-MiniMax-M2.1
 MiniMax-M2.5
 MiniMax-M2.7
 MiniMax-M3
@@ -1270,25 +804,10 @@ MiniMax-M3.1-Flash
 ## MiniMax: Video, speech, music and products
 Hailuo
 Hailuo AI
-Video-01
-I2V-01
-T2V-01-Director
-Image-01
-Speech-02
-Speech-02-hd
-Speech-02-turbo
-MiniMax-Hailuo-02
-Hailuo 02
-Music-1.5
-Speech-2.5
 MiniMax-Hailuo-2.3
 Hailuo 2.3
 Hailuo 2.3 Fast
-Speech-2.6
-Music-2.0
 Speech-2.8
-Music-2.5
-Music-2.6
 Music-3.0
 MiniMax-H3
 MiniMax Audio
@@ -1300,29 +819,6 @@ Xingye
 Doubao
 Seed
 ByteDance Seed
-Doubao-1.5-pro
-Doubao-1.5-lite
-Doubao-1.5-vision-pro
-Doubao-1.5-thinking-pro
-Seed1.5-Thinking
-Seed-Coder
-Seed1.5-VL
-Seed1.6
-Doubao-Seed-1.6
-Doubao-Seed-1.6-thinking
-Doubao-Seed-1.6-flash
-Seed-X
-Seed Diffusion Preview
-Seed-OSS
-Seed-OSS-36B
-Doubao-Seed-1.6-vision
-Doubao-Seed-Translation
-Ouro
-Valley
-Valley2.5
-Doubao-Seed-Code
-Seed1.8
-Doubao-Seed-1.8
 Seed2.0
 Doubao-Seed-2.0
 Seed2.0 Pro
@@ -1336,31 +832,9 @@ Seed2.1 Pro
 Seed2.1 Turbo
 
 ## ByteDance: Seedream, Seedance and media
-Seed-TTS
-Seed-ASR
-Seed-Music
 OmniHuman
-OmniHuman-1
-MegaTTS3
-Seaweed
 Seedream
-Seedream 3.0
-BAGEL
-SeedEdit
-SeedEdit 3.0
 Seedance
-Seedance 1.0
-Seedance 1.0 Pro
-Seedance 1.0 Lite
-SeedVR2
-Seed LiveInterpret 2.0
-OmniHuman-1.5
-Seedream 4.0
-Seed3D
-Seed3D 1.0
-Depth Anything 3
-Seedream 4.5
-Seedance 1.5 pro
 Seedance 2.0
 Seedance 2.0 Fast
 Seedream 5.0
@@ -1642,191 +1116,6 @@ Spark X2-Flash
 Spark-X2.5
 Spark-X2.6
 
-## SenseTime: SenseNova
-SenseTime
-SenseNova
-SenseChat
-SenseNova V5.0
-SenseNova V5.5
-SenseNova V6
-SenseNova V6 Omni
-SenseNova V6.5
-SenseNova-SI
-InteractiveOmni
-SenseNova-MARS
-SenseNova U1
-SenseNova 6.7 Flash-Lite
-SenseNova U1.5
-
-## Kuaishou: Kling and Kolors
-Kuaishou
-Kling AI
-Kling
-Kling 1.0
-Kolors
-Kling 1.5
-Kling 1.6
-Kling 2.0
-Kling 2.0 Master
-Kolors 2.0
-Kling 2.1
-Kling 2.1 Master
-Kling 2.5 Turbo
-Kling O1
-Kling 2.6
-Kling 3.0
-Kling 3.0 Omni
-Kling 4.0
-
-## Kuaishou: Kwaipilot and Keye
-Kwaipilot
-KwaiCoder
-KwaiCoder-AutoThink
-Keye-VL
-Kwai Keye
-KAT-V1
-Keye-VL-1.5
-KAT-Dev
-KAT-Dev-72B-Exp
-KAT-Coder
-Keye-VL-671B-A37B
-Keye-VL-2.0
-KAT-Coder-V2.5-Dev
-
-## Xiaomi: MiMo
-Xiaomi MiMo
-MiMo
-MiMo-7B
-MiMo-VL
-MiMo-VL-7B
-MiMo-Audio
-MiMo-Embodied
-MiMo-V2-Flash
-MiMo-V2.5
-MiMo-V2.5-Pro
-MiMo-V2.5-ASR
-MiMo-V2.6
-MiMo-V2.6-Flash
-MiMo-V2.6-Pro
-
-## Meituan: LongCat
-Meituan
-LongCat
-LongCat-Flash
-LongCat-Flash-Chat
-LongCat-Flash-Thinking
-LongCat-Flash-Omni
-LongCat-Video
-LongCat-Audio-Codec
-LongCat-Image
-LongCat-Image-Edit
-LongCat-Video-Avatar
-LongCat-Flash-Thinking-2601
-LongCat-Flash-Lite
-LongCat-Next
-LongCat-Flash-Prover
-LongCat-AudioDiT
-LongCat-Video-Avatar-1.5
-LongCat-2.0
-
-## Ant Group: Company and products
-Ant Group
-inclusionAI
-Bailing
-Zhixiaobao
-AQ
-LingGuang
-Ant Afu
-Robbyant
-LingBot-World
-
-## Ant Group: Ling, Ring and Ming
-Ling
-Ring
-Ming
-Ling-lite
-Ling-plus
-Ling-Coder-lite
-Ming-Lite-Omni
-Ming-Lite-Uni
-Ling-lite-1.5
-Ring-lite
-Ming-lite-omni 1.5
-Ling 2.0
-Ling-mini-2.0
-Ling-flash-2.0
-Ring-mini-2.0
-Ring-flash-2.0
-Ring-flash-linear-2.0
-Ming-UniAudio
-Ming-UniVision
-Ling-1T
-Ring-1T
-Ming-flash-omni
-Ling-2.5-1T
-Ring-2.5-1T
-Ming-flash-omni 2.0
-Ring-2.6-1T
-Ling-2.6-1T
-Ling-2.6-flash
-Ling-3.0
-Ling-3.0-flash
-Ling-3.0-tiny
-Ling-3.0-flash-VL
-Ming-3.0
-Ling-3.1-flash
-
-## Ant Group: LLaDA, AReaL and agents
-AReaL
-AReaL-boba
-ASearcher
-UI-Venus
-AWorld
-LLaDA-MoE
-LLaDA2.0
-LLaDA2.0-mini
-LLaDA2.0-flash
-LLaDA2.1
-LLaDA2.2
-
-## Shanghai AI Lab: Lab and tools
-Shanghai AI Lab
-Shanghai Artificial Intelligence Laboratory
-Intern
-OpenCompass
-LMDeploy
-XTuner
-MinerU
-
-## Shanghai AI Lab: InternLM and Intern-S
-InternLM
-InternLM2
-InternLM-Math
-InternLM2.5
-InternLM3
-Intern-S1
-Intern-S1-mini
-Intern-S1-Pro
-Intern-S2-Preview
-Intern-S2
-Atria Dawn
-
-## Shanghai AI Lab: InternVL and XComposer
-InternVL
-InternViT
-InternLM-XComposer
-InternLM-XComposer2
-InternVideo
-InternVideo2
-InternVL 1.5
-Mini-InternVL
-InternVL2
-InternLM-XComposer2.5
-InternVL2.5
-InternVideo2.5
-InternVL3
-InternVL3.5
-
 ## Manus: Agent
 Butterfly Effect
 Monica
@@ -1845,115 +1134,6 @@ AI Sheets
 Speakly
 Genspark Claw
 
-## Skywork: Company and products
-Kunlun Tech
-Kunlun Wanwei
-Skywork
-Skywork AI
-Mureka
-Mureka V8
-Mureka V9
-Mureka V9.5
-Mureka O3
-Skywork Super Agents
-Skywork Desktop
-DramaWave
-
-## Skywork: Models
-Skywork-13B
-Skywork-MoE
-Skywork-Reward
-Skywork-Critic
-Skywork-o1-Open
-SkyReels-V1
-SkyReels-A1
-SkyReels-A2
-Skywork-R1V
-Skywork-R1V2
-Skywork-OR1
-Skywork-VL-Reward
-Matrix-Game
-Skywork-SWE
-Skywork-Reward-V2
-SkyReels-V2
-Matrix-3D
-Skywork-R1V3
-Skywork-UniPic
-Matrix-Game 2.0
-UniPic 2.0
-MindLink
-Skywork-R1V4
-SkyReels-V3
-UniPic 3.0
-SkyReels V4
-Matrix-Game 3.0
-Matrix-Game 4.0
-
-## OpenBMB: MiniCPM and VoxCPM
-OpenBMB
-ModelBest
-CPM-Bee
-VisCPM
-MiniCPM
-MiniCPM-2B
-MiniCPM-V
-OmniLMM
-MiniCPM-V 2.0
-MiniCPM-Llama3-V 2.5
-MiniCPM-V 2.6
-MiniCPM3
-MiniCPM-o 2.6
-MiniCPM4
-BitCPM4
-AgentCPM-GUI
-MiniCPM-V 4
-MiniCPM-V 4.5
-MiniCPM4.1
-VoxCPM
-VoxCPM1.5
-AgentCPM
-MiniCPM-SALA
-MiniCPM-o 4.5
-VoxCPM2
-MiniCPM-V 4.6
-MiniCPM5
-MiniCPM-V 4.7
-
-## Huawei: Pangu
-Huawei
-Pangu
-PanguLM
-Pangu 5.0
-Pangu 5.5
-Pangu Pro MoE
-Pangu Ultra
-Pangu Ultra MoE
-openPangu
-openPangu-Embedded
-openPangu-Ultra-MoE-718B
-
-## Huawei: Ascend and software
-Ascend
-Ascend 910B
-Ascend 910C
-CloudMatrix 384
-Atlas 900 SuperPoD
-Ascend 950
-Ascend 950PR
-Ascend 950DT
-Ascend 960
-Ascend 970
-Atlas 950 SuperPoD
-Atlas 950 SuperCluster
-Atlas 960 SuperPoD
-CANN
-MindSpore
-MindIE
-
-## Huawei: Assistants
-Celia
-Xiaoyi
-
 ## Cambricon: Chips and software
 Cambricon
 MLU
@@ -1965,187 +1145,6 @@ MLU690
 Siyuan
 Siyuan 590
 NeuWare
-
-## Sakana AI: Research and models
-Evolutionary Model Merge
-EvoLLM-JP
-EvoVLM-JP
-EvoSDXL-JP
-DiscoPOP
-Evo-Ukiyoe
-Evo-Nishikie
-AI Scientist
-CycleQD
-Transformer²
-TinySwallow
-TinySwallow-1.5B
-TAID
-AI CUDA Engineer
-Sudoku-Bench
-Karamaru
-AI Scientist-v2
-Continuous Thought Machine
-CTM
-DGM
-Text-to-LoRA
-ALE-Bench
-ALE-Agent
-AB-MCTS
-TreeQuest
-Digital Red Queen
-DroPE
-Doc-to-LoRA
-KAME
-DiffusionBlocks
-
-## Sakana AI: Products
-Sakana Marlin
-Fugu-Cyber
-Fugu-Ultra v1.1
-Sakana Chat
-Sakana Translate
-Sakana Namazu
-Fugu Max
-Fugu Ultra v2
-Sakana Aquarium
-
-## Preferred Networks: PLaMo and MN-Core
-Preferred Networks
-PFN
-MN-Core
-MN-Core 2
-MN-Core L1000
-PLaMo
-PLaMo-13B
-PLaMo Lite
-PLaMo-100B
-PLaMo 2
-PLaMo Translate
-PLaMo-Embedding-1B
-PLaMo 2.1
-PLaMo 2.1 Prime
-PLaMo 3
-PLaMo 3.0 Prime
-
-## Japan: Swallow (Institute of Science Tokyo)
-Swallow
-Swallow-MS
-Swallow-MX
-Llama 3 Swallow
-Llama 3.1 Swallow
-Llama 3.3 Swallow
-Gemma 2 Llama Swallow
-Qwen3 Swallow
-GPT-OSS Swallow
-
-## Japan: LLM-jp
-LLM-jp
-LLM-jp-13B
-LLM-jp-3
-LLM-jp-3.1
-LLM-jp-4
-LLM-jp-4.1
-
-## Japan: ELYZA
-ELYZA
-ELYZA-japanese-Llama-2
-Llama-3-ELYZA-JP
-ELYZA-Thinking-1.0
-ELYZA-Shortcut-1.0
-ELYZA-Diffusion
-
-## Japan: SB Intuitions and others
-SB Intuitions
-Sarashina
-Sarashina2
-Sarashina2.1
-Sarashina2.2
-Sarashina2-Vision
-tsuzumi
-tsuzumi 2
-cotomi
-Fugaku-LLM
-Takane
-
-## Upstage: Solar
-Upstage
-SOLAR 10.7B
-TinySolar
-Solar Mini
-Solar Pro Preview
-Solar Pro
-Solar Pro 2
-Solar Open
-Solar Open 100B
-Solar Pro 3
-Solar Open 2
-Solar Pro 4
-Solar Mini 4
-Document Parse
-Solar DocVision
-
-## LG: EXAONE
-LG AI Research
-EXAONE
-EXAONE 3.0
-EXAONEPath
-EXAONE 3.5
-EXAONE Deep
-EXAONE Path 1.5
-EXAONE Path 2.0
-EXAONE 4.0
-EXAONE Path 2.5
-K-EXAONE
-EXAONE 4.5
-K-EXAONE 2.0
-
-## Naver: HyperCLOVA X
-Naver
-HyperCLOVA
-HyperCLOVA X
-CLOVA X
-Cue:
-HyperCLOVA X SEED
-HyperCLOVA X THINK
-HyperCLOVA X SEED Think 14B
-HyperCLOVA X SEED 8B Omni
-HyperCLOVA X SEED 32B Think
-
-## Kakao: Kanana
-Kakao
-Kanana
-Kanana Nano
-Kanana-1.5
-Kanana-o
-Kanana Safeguard
-Kanana-2
-
-## Korea: SK Telecom, KT, NC AI and Trillion Labs
-SK Telecom
-A.X
-A.X 4.0
-A.X 4.0 Light
-A.X 3.1
-A.X 4.0 VL Light
-A.X K1
-A.X K2
-K-intelligence
-Mi:dm
-Mi:dm 2.0
-NC AI
-VARCO
-Llama-VARCO
-VARCO Vision
-VARCO Vision 2.0
-VARCO 3D
-VAETKI
-Trillion Labs
-Trillion-7B
-Tri-7B
-Tri-21B
-Tri-70B
-Trida-7B
-Tri-21B-Think
 
 ## India: Sarvam AI
 Sarvam AI
@@ -2193,35 +1192,6 @@ Shrutam-2
 Sooktam2
 Hanooman
 
-## TII: Falcon
-Falcon LLM
-Falcon 7B
-Falcon 40B
-Falcon 180B
-Falcon 2 11B
-Falcon 2 11B VLM
-Falcon Mamba
-Falcon Mamba 7B
-Falcon-E
-Falcon-H1R 7B
-Falcon-H1 Arabic
-Falcon-H1 Tiny
-Falcon Perception
-Falcon OCR
-
-## G42 and Inception: Jais
-G42
-Inception
-Inception42
-Jais
-Jais 13B
-Jais 30B
-Jais Family
-Sherkala
-Jais 2
-Jais 3
-Jais Speech
-
 ## MBZUAI: K2 and LLM360
 MBZUAI
 Institute of Foundation Models
@@ -2232,14 +1202,6 @@ K2 Think
 K2-V2
 K2 Think V2
 K2 Horizon
-
-## Humain: ALLaM
-HUMAIN
-SDAIA
-ALLaM
-ALLaM 7B
-ALLaM 34B
-HUMAIN Chat
 
 ## Singapore: SEA-LION and MERaLiON
 AI Singapore
@@ -2288,7 +1250,6 @@ Prime Intellect
 Essential AI
 Adept
 Imbue
-Reka AI
 Contextual AI
 Advanced Machine Intelligence
 AMI Labs
@@ -2308,7 +1269,6 @@ Alibaba
 ByteDance
 Tencent
 Baidu
-Xiaomi
 Unitree
 
 ## AI labs & companies: Generative media
@@ -2429,310 +1389,6 @@ W&B
 MosaicML
 SoftBank
 MGX
-
-## AI people: Anthropic
-Dario Amodei
-Daniela Amodei
-Amodei
-Jared Kaplan
-Jack Clark
-Sam McCandlish
-Tom Brown
-Ben Mann
-Chris Olah
-Jan Leike
-Mike Krieger
-Krishna Rao
-Boris Cherny
-Cat Wu
-Amanda Askell
-Holden Karnofsky
-Evan Hubinger
-Josh Batson
-Logan Graham
-Alex Albert
-
-## AI people: OpenAI
-Sam Altman
-Greg Brockman
-Jakub Pachocki
-Mark Chen
-Fidji Simo
-Brad Lightcap
-Kevin Weil
-Nick Turley
-Jason Kwon
-Sarah Friar
-Bret Taylor
-Noam Brown
-Barret Zoph
-Luke Metz
-Sam Schoenholz
-Wojciech Zaremba
-Alec Radford
-Łukasz Kaiser
-Jerry Tworek
-Szymon Sidor
-Hunter Lightman
-Johannes Heidecke
-Peter Steinberger
-Romain Huet
-
-## AI people: Google & DeepMind
-Demis Hassabis
-Hassabis
-Shane Legg
-Koray Kavukcuoglu
-Kavukcuoglu
-Jeff Dean
-Noam Shazeer
-Oriol Vinyals
-Sundar Pichai
-Sergey Brin
-Lila Ibrahim
-Pushmeet Kohli
-Neel Nanda
-John Jumper
-Josh Woodward
-Logan Kilpatrick
-Tulsee Doshi
-Varun Mohan
-Raia Hadsell
-Quoc Le
-Denny Zhou
-
-## AI people: Meta, xAI & big tech
-Mark Zuckerberg
-Alexandr Wang
-Nat Friedman
-Daniel Gross
-Shengjia Zhao
-Ahmad Al-Dahle
-Jack Rae
-Jason Wei
-Hyung Won Chung
-Chris Cox
-Andrew Bosworth
-Elon Musk
-Igor Babuschkin
-Jimmy Ba
-Christian Szegedy
-Satya Nadella
-Mustafa Suleyman
-Kevin Scott
-Jensen Huang
-Lisa Su
-Tim Cook
-Andy Jassy
-Matt Garman
-Larry Ellison
-Masayoshi Son
-Michael Intrator
-Jeff Bezos
-Vik Bajaj
-
-## AI people: Startup founders & lab leaders
-Ilya Sutskever
-Sutskever
-Mira Murati
-John Schulman
-Soumith Chintala
-Lilian Weng
-Andrew Tulloch
-Yann LeCun
-LeCun
-Alex LeBrun
-Arthur Mensch
-Guillaume Lample
-Timothée Lacroix
-Aidan Gomez
-Nick Frosst
-Clem Delangue
-Thomas Wolf
-Julien Chaumond
-Aravind Srinivas
-Misha Laskin
-Ioannis Antonoglou
-David Silver
-Eric Zelikman
-Andi Peng
-Noah Goodman
-Georges Harik
-Anna Goldie
-Azalia Mirhoseini
-Naveen Rao
-Liam Fedus
-Ekin Dogus Cubuk
-Fei-Fei Li
-Justin Johnson
-Reid Hoffman
-Karen Simonyan
-Liang Wenfeng
-Yang Zhilin
-Kai-Fu Lee
-Wang Xiaochuan
-Yan Junjie
-Zhang Peng
-Jiang Daxin
-Luo Fuli
-Robin Li
-Lin Junyang
-Llion Jones
-David Ha
-Brett Adcock
-Bernt Børnich
-Deepak Pathak
-Karol Hausman
-Sergey Levine
-Chelsea Finn
-Lachy Groom
-Raquel Urtasun
-Edwin Chen
-Brendan Foody
-Winston Weinberg
-Arvind Jain
-Clay Bavor
-Jesse Zhang
-Scott Wu
-Michael Truell
-Aman Sanger
-Amjad Masad
-Anton Osika
-Eiso Kant
-Jason Warner
-Emad Mostaque
-Robin Rombach
-Cristóbal Valenzuela
-Mati Staniszewski
-Mikey Shulman
-David Holz
-Andrew Feldman
-Jonathan Ross
-Jim Keller
-Gavin Uberti
-Rodrigo Liang
-Ali Ghodsi
-Matei Zaharia
-Robert Nishihara
-Ion Stoica
-Erik Bernhardsson
-Lukas Biewald
-Vipul Ved Prakash
-Lin Qiao
-Tri Dao
-Percy Liang
-Christopher Manning
-Chris Ré
-
-## AI people: Pioneers & academics
-Geoffrey Hinton
-Yoshua Bengio
-Jürgen Schmidhuber
-Schmidhuber
-Ashish Vaswani
-Niki Parmar
-Jakob Uszkoreit
-Illia Polosukhin
-Richard Sutton
-Andrew Barto
-Andrew Ng
-Daphne Koller
-Stuart Russell
-Max Tegmark
-Gary Marcus
-Melanie Mitchell
-Pieter Abbeel
-Ian Goodfellow
-Alex Krizhevsky
-Kaiming He
-Yejin Choi
-Emily Bender
-Timnit Gebru
-Margaret Mitchell
-Michael Jordan
-Judea Pearl
-Song-Chun Zhu
-Albert Gu
-Sasha Rush
-Graham Neubig
-Jacob Steinhardt
-Dan Hendrycks
-Paul Christiano
-Eliezer Yudkowsky
-Nick Bostrom
-Toby Ord
-Daniel Kokotajlo
-Scott Alexander
-Leopold Aschenbrenner
-Ajeya Cotra
-Beth Barnes
-Jaime Sevilla
-François Chollet
-Mike Knoop
-
-## AI people: Engineers, educators & writers
-Andrej Karpathy
-Karpathy
-Simon Willison
-Shawn Wang
-swyx
-Alessio Fanelli
-Jeremy Howard
-Rachel Thomas
-Sebastian Raschka
-Chip Huyen
-Hamel Husain
-Shreya Shankar
-Eugene Yan
-Jason Liu
-Harrison Chase
-Jerry Liu
-Lance Martin
-Nathan Lambert
-Jack Morris
-Ethan Mollick
-Dwarkesh Patel
-Lex Fridman
-Kevin Roose
-Casey Newton
-Ben Thompson
-Dylan Patel
-Zvi Mowshowitz
-Gwern
-Riley Goodside
-Pliny the Liberator
-Yannic Kilcher
-Grant Sanderson
-3Blue1Brown
-Two Minute Papers
-Matt Shumer
-Guillermo Rauch
-Steve Yegge
-Theo Browne
-ThePrimeagen
-DHH
-Pieter Levels
-levelsio
-Mitchell Hashimoto
-Geoffrey Litt
-Linus Lee
-Amelia Wattenberger
-Addy Osmani
-Jesse Vincent
-Kent Beck
-Armin Ronacher
-Tobi Lütke
-Marc Andreessen
-Ben Horowitz
-Garry Tan
-Paul Graham
-Elad Gil
-Sarah Guo
-Vinod Khosla
-Martin Casado
-David Sacks
-Sriram Krishnan
-Michael Kratsios
 
 ## Papers, ideas & named results: Architectures & methods
 Attention Is All You Need
@@ -4075,7 +2731,6 @@ Confluence
 fzf
 ripgrep
 rg
-fd
 jq
 eza
 zoxide
@@ -4223,6 +2878,200 @@ approval modes
 Memory Bank
 steering files
 
+## Tooling: Web, API & data formats
+JSON
+JSON Schema
+JSON-RPC
+JSONL
+YAML
+TOML
+CSV
+Protocol Buffers
+protobuf
+REST
+REST API
+GraphQL
+gRPC
+WebSocket
+WebRTC
+server-sent events
+OpenAPI
+Swagger
+Postman
+Insomnia
+HTTPie
+yq
+localhost
+CORS
+CDN
+DNS
+HTTPS
+TLS
+SSL
+HTTP/2
+HTTP/3
+QUIC
+
+## Tooling: Auth & security
+OAuth
+OAuth 2.0
+OpenID Connect
+OIDC
+SAML
+SSO
+JWT
+2FA
+TOTP
+WebAuthn
+passkeys
+RBAC
+mTLS
+CSRF
+XSS
+SQL injection
+OWASP
+CVE
+SBOM
+Dependabot
+Snyk
+Trivy
+SonarQube
+Okta
+Keycloak
+
+## Tooling: Cloud services
+CloudFormation
+AWS CDK
+IAM
+VPC
+ECR
+Fargate
+CloudFront
+Route 53
+DynamoDB
+RDS
+SQS
+SNS
+Kinesis
+EventBridge
+Step Functions
+CloudWatch
+Redshift
+Google Cloud Platform
+Cloud Functions
+Cloud Storage
+Pub/Sub
+AKS
+Azure Functions
+Cosmos DB
+MinIO
+Linode
+
+## Tooling: Containers, Kubernetes & CI/CD
+BuildKit
+Buildx
+GHCR
+kind
+k9s
+Lens
+Rancher
+OpenShift
+Kustomize
+kubeconfig
+Pod
+Deployment
+StatefulSet
+DaemonSet
+ReplicaSet
+ConfigMap
+CronJob
+PersistentVolume
+Ingress
+service mesh
+Linkerd
+HAProxy
+Argo Workflows
+Flux CD
+Nomad
+Consul
+Packer
+Vagrant
+CI/CD
+Travis CI
+Bitbucket
+Dev Containers
+pre-commit
+Husky
+microservices
+serverless
+monorepo
+
+## Tooling: Operating systems & shell
+Linux
+Ubuntu
+Debian
+Fedora
+CentOS
+Rocky Linux
+Arch Linux
+Alpine Linux
+WSL
+systemd
+cron
+crontab
+Bash
+fish
+OpenSSH
+rsync
+scp
+bat
+htop
+btop
+Wireshark
+VPN
+
+## Tooling: Testing & code quality
+Cypress
+Selenium
+unittest
+Hypothesis
+Storybook
+Babel
+Express
+NestJS
+Fastify
+
+## Tooling: Data & analytics
+dbt
+Airbyte
+Fivetran
+Apache Spark
+PySpark
+Hadoop
+Apache Iceberg
+Delta Lake
+Looker
+Tableau
+Metabase
+Apache Superset
+Kubeflow
+
+## Tooling: Work & communication
+Discord
+Zoom
+Loom
+Google Meet
+Microsoft Teams
+Asana
+ClickUp
+Trello
+Miro
+Excalidraw
+Calendly
+SendGrid
+Mailgun
+Postmark
+
 # ======================================================================
 # Apple platforms & this project
 # ======================================================================
@@ -4347,3 +3196,4 @@ garfield-oo7
 ## Corrections
 LangGraph | land graph
 kubectl | cube control | cube cuddle | kube control
+Postgres | post gress | post grass
