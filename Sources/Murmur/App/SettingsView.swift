@@ -10,7 +10,7 @@ struct SettingsView: View {
     @AppStorage(FlowPill.enabledKey) private var showPill = true
     @AppStorage(FlowPill.Position.key) private var pillPosition = FlowPill.Position.bottom.rawValue
     @AppStorage(LevelMeter.sensitivityKey) private var sensitivity = 0.5
-    @AppStorage(Microphone.defaultsKey) private var microphone = Microphone.builtIn
+    @AppStorage(Microphone.defaultsKey) private var microphone = Microphone.automatic
     @AppStorage(TranscriptionEngine.Kind.key) private var engine = TranscriptionEngine.Kind.dictation.rawValue
     @AppStorage(TextInserter.methodKey) private var insertionMethod = TextInserter.Method.paste.rawValue
     @AppStorage(DictationHistory.enabledKey) private var keepHistory = true
@@ -39,11 +39,10 @@ struct SettingsView: View {
                 .font(.callout)
                 .foregroundStyle(.secondary)
             Picker("Microphone", selection: $microphone) {
+                Text("Automatic (wired headset, else built-in)").tag(Microphone.automatic)
                 Text("Built-in microphone").tag(Microphone.builtIn)
                 Text("System default").tag(Microphone.systemDefault)
-                let others = Microphone.available.filter {
-                    $0.transportType != Int32(bitPattern: kAudioDeviceTransportTypeBuiltIn)
-                }
+                let others = Microphone.available.filter { $0.uniqueID != "BuiltInMicrophoneDevice" }
                 if !others.isEmpty {
                     Divider()
                     ForEach(others, id: \.uniqueID) { Text($0.localizedName).tag($0.uniqueID) }

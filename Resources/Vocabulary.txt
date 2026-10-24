@@ -3096,6 +3096,7 @@ iPhone
 iPad
 Vision Pro
 AirPods Pro
+EarPods
 
 ## Apple platforms: frameworks and APIs
 Foundation
