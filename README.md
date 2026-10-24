@@ -32,6 +32,8 @@ macOS ties those permissions to the app's code signature. `build.sh` signs every
 - While you hold the shortcut, a small **waveform pill** at the bottom of the screen shows Murmur is listening. Its bars follow your voice, then shimmer while the text is produced. It never takes focus from your app.
 - **Esc** while holding cancels (the pill shakes). A very short tap does nothing.
 - **Vocabulary:** Murmur knows about 4,000 AI-engineering names (models from every major lab, tools, people, companies) from `Murmur/Vocabulary.txt`, and spells them exactly: "tail scale" → Tailscale, "deep seek v3" → DeepSeek-V3, "cube control" → kubectl. Add your own with **Settings → Edit My Vocabulary…** (same format; the changes apply after your next dictation).
+- **Paths and commands:** say "tilde slash dot claude slash settings dot json" for `~/.claude/settings.json`, or "slash model" for `/model`.
+- **Context-aware fixes:** phrases that are real English ("clots on it") are only corrected to a term (Claude Sonnet) when the sentence is technical, i.e. it has a path, a `/command` or a known name.
 - Murmur **opens at login** (turn it off in Settings, or in System Settings → General → Login Items).
 - **Settings…** in the menu: change the shortcut, pick the microphone (built-in by default, so AirPods aren't hijacked), choose how text is inserted, turn sounds or the waveform off, and set how strongly the bars react.
 

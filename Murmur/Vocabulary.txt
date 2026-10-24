@@ -8,8 +8,10 @@
 # Format (easy to extend: add a line, or a new section):
 #   ## Group: Subgroup        starts a section
 #   Term                      one per line, written exactly as it should appear
-#   Term | heard as | ...     also rewrites known mishearings to Term. Use sparingly,
-#                             only for phrases that are never legitimate on their own.
+#   Term | heard as | ...     also rewrites known mishearings to Term. Mishearings
+#                             made of real words ("clots on it") are only fixed in
+#                             technical sentences (a path, /command or known term);
+#                             prefix one with ! to fix it everywhere ("Murmur | !mural").
 #   # comment
 #
 # Your own additions go in ~/Library/Application Support/Murmur/Vocabulary.txt
@@ -3195,6 +3197,12 @@ garfield-oo7
 
 ## Corrections
 LangGraph | land graph
-kubectl | cube control | cube cuddle | kube control
+kubectl | !cube control | !cube cuddle | kube control
 Postgres | post gress | post grass
-Murmur | mural | murals
+Murmur | !mural | !murals
+Claude Sonnet | clots on it | clot sonnet | cloud sonnet
+Claude Opus | cloud opus | clot opus
+Claude Code | clot code | cloud code | clawed code
+Claude | clawed | clod
+CLAUDE.md | claw.md | clawed.md | cloud.md
+AGENTS.md | agents.d

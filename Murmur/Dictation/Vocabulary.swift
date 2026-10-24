@@ -21,7 +21,12 @@ nonisolated struct Vocabulary: Sendable {
     /// Normalized spoken form → canonical term.
     private var canonical: [String: String] = [:]
     /// Lowercased mishearing → canonical term, from `Term | mishearing` lines.
-    private var corrections: [String: String] = [:]
+    /// `always` is false for mishearings made only of real English words ("clots on it"),
+    /// which are only fixed in technical sentences.
+    private var corrections: [String: (term: String, always: Bool)] = [:]
+    /// Single-word terms that aren't English words ("Claude", "Docker"): seeing one
+    /// marks a sentence as technical.
+    private var markers: Set<String> = []
     /// Longest span to try, in tokens (words and the separators between them).
     private var maxTokens = 1
 
@@ -64,12 +69,16 @@ nonisolated struct Vocabulary: Sendable {
             guard let term = parts.first, !term.isEmpty else { continue }
 
             if seen.insert(term).inserted { terms.append(term) }
-            for mishearing in parts.dropFirst() where !mishearing.isEmpty {
-                corrections[mishearing.lowercased()] = term
+            for var mishearing in parts.dropFirst() where !mishearing.isEmpty {
+                var always = mishearing.hasPrefix("!")
+                if always { mishearing.removeFirst() }
+                always = always || !mishearing.split(separator: " ").allSatisfy { Self.isDictionaryWord(String($0)) }
+                corrections[mishearing.lowercased()] = (term, always)
                 maxTokens = max(maxTokens, Self.tokenize(mishearing).count)
             }
             // Canonicalize by spelling only when that can't capitalize ordinary prose:
             // skip single words that are plain English ("Go", "Linear", "Modal").
+            if !term.contains(" "), !Self.isDictionaryWord(term) { markers.insert(term) }
             if term.contains(" ") || !Self.isDictionaryWord(term) {
                 canonical[Self.normalize(term)] = term
                 // Spoken forms can have extra breaks: "tail scale" for "Tailscale".
@@ -80,8 +89,22 @@ nonisolated struct Vocabulary: Sendable {
 
     // MARK: Canonicalization
 
-    /// Rewrites recognized phrases to their vocabulary spelling. Longest match wins.
+    /// Formats paths and slash commands, then rewrites recognized phrases to their
+    /// vocabulary spelling (longest match wins). Real-word mishearings are applied only
+    /// when the sentence turns out to be technical.
     func canonicalize(_ text: String) -> String {
+        let first = rewrite(SpokenSyntax.apply(text), technical: false)
+        guard isTechnical(first) else { return first }
+        return rewrite(first, technical: true)
+    }
+
+    /// A path or slash command, or a term like "Claude" or "Docker".
+    private func isTechnical(_ text: String) -> Bool {
+        if text.contains("~/") || text.range(of: #"(^|\s)/[a-z]"#, options: .regularExpression) != nil { return true }
+        return Self.tokenize(text).contains { $0.isWord && markers.contains($0.text) }
+    }
+
+    private func rewrite(_ text: String, technical: Bool) -> String {
         guard !canonical.isEmpty || !corrections.isEmpty else { return text }
         let tokens = Self.tokenize(text)
         var output = ""
@@ -91,7 +114,7 @@ nonisolated struct Vocabulary: Sendable {
             if tokens[i].isWord {
                 for length in stride(from: min(maxTokens, tokens.count - i), through: 1, by: -1) {
                     let span = tokens[i..<(i + length)]
-                    guard span.last!.isWord, let term = match(span) else { continue }
+                    guard span.last!.isWord, let term = match(span, technical: technical) else { continue }
                     output += term
                     i += length
                     replaced = true
@@ -106,9 +129,9 @@ nonisolated struct Vocabulary: Sendable {
         return output
     }
 
-    private func match(_ span: ArraySlice<Token>) -> String? {
+    private func match(_ span: ArraySlice<Token>, technical: Bool) -> String? {
         let phrase = span.map(\.text).joined()
-        if let term = corrections[phrase.lowercased()] { return term }
+        if let rule = corrections[phrase.lowercased()], rule.always || technical { return rule.term }
         // Only spans made of words joined by spaces, hyphens or dots, e.g. "tail scale",
         // "GPT 4o", "Qwen 3 coder". Never across other punctuation.
         guard span.allSatisfy({ $0.isWord || [" ", "-", "."].contains($0.text) }) else { return nil }
@@ -150,8 +173,20 @@ nonisolated struct Vocabulary: Sendable {
         return Set(words.split(separator: "\n").map { $0.lowercased() })
     }()
 
+    /// Whether `s` is an English word, allowing simple inflections the word list lacks
+    /// ("clots", "murals", "deployed", "running"). Punctuation is ignored, so "/compact"
+    /// counts as "compact".
     static func isDictionaryWord(_ s: String) -> Bool {
-        dictionary.contains(s.lowercased())
+        let w = normalize(s)
+        guard !w.isEmpty else { return false }
+        if dictionary.contains(w) { return true }
+        for suffix in ["s", "es", "ed", "d", "ing"] where w.hasSuffix(suffix) && w.count > suffix.count + 2 {
+            let stem = String(w.dropLast(suffix.count))
+            if dictionary.contains(stem) || dictionary.contains(stem + "e") { return true }
+            // "running" → "run", "clotted" → "clot"
+            if let last = stem.last, stem.dropLast().last == last, dictionary.contains(String(stem.dropLast())) { return true }
+        }
+        return false
     }
 
     // MARK: User file
