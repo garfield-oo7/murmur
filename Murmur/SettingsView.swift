@@ -7,6 +7,7 @@ struct SettingsView: View {
     let model: AppModel
     @AppStorage("playSounds") private var playSounds = true
     @AppStorage(FlowPill.enabledKey) private var showPill = true
+    @AppStorage(FlowPill.Position.key) private var pillPosition = FlowPill.Position.center.rawValue
     @AppStorage(LevelMeter.sensitivityKey) private var sensitivity = 0.5
     @AppStorage(Microphone.defaultsKey) private var microphone = Microphone.builtIn
     @AppStorage(TextInserter.methodKey) private var insertionMethod = TextInserter.Method.paste.rawValue
@@ -35,6 +36,10 @@ struct SettingsView: View {
             }
             Toggle("Play start and stop sounds", isOn: $playSounds)
             Toggle("Show waveform while dictating", isOn: $showPill)
+            Picker("Waveform position", selection: $pillPosition) {
+                ForEach(FlowPill.Position.allCases) { Text($0.title).tag($0.rawValue) }
+            }
+            .disabled(!showPill)
             LabeledContent("Waveform sensitivity") {
                 Slider(value: $sensitivity, in: 0...1) {
                     EmptyView()

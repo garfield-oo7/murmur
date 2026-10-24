@@ -15,6 +15,17 @@ final class FlowPill {
 
     static let enabledKey = "showPill"
 
+    enum Position: String, CaseIterable, Identifiable {
+        case center, bottom
+        var id: String { rawValue }
+        var title: String { self == .center ? "Center of screen" : "Bottom of screen" }
+
+        static let key = "pillPosition"
+        static var current: Position {
+            UserDefaults.standard.string(forKey: key).flatMap(Position.init) ?? .center
+        }
+    }
+
     private(set) var phase = Phase.hidden
     /// When the current shake (cancel / error) started, for the view's animation.
     private(set) var shakeStart = Date.distantPast
@@ -109,11 +120,16 @@ final class FlowPill {
         return panel
     }
 
-    /// Bottom-center of the screen you're working on, just above the Dock.
+    /// Middle of the screen you're working on, or bottom-center just above the Dock.
+    /// The capsule sits 14 pt above the panel's bottom edge, hence the offsets.
     private func position(_ panel: NSPanel) {
         guard let screen = NSScreen.main ?? NSScreen.screens.first else { return }
         let frame = screen.visibleFrame
-        panel.setFrameOrigin(CGPoint(x: frame.midX - Self.panelSize.width / 2, y: frame.minY + 6))
+        let y = switch Position.current {
+        case .center: frame.midY - 14 - 18
+        case .bottom: frame.minY + 6
+        }
+        panel.setFrameOrigin(CGPoint(x: frame.midX - Self.panelSize.width / 2, y: y))
     }
 }
 
