@@ -33,10 +33,9 @@ final class Permissions {
     }
 
     func requestAccessibility() {
-        // Shows the system "would like to control this computer" alert the first time
-        // and adds Murmur to the list; afterwards it does nothing, so also open Settings.
+        // The first request shows the system alert and adds Murmur to the list. After
+        // that the alert would just stack on top of Settings, so open Settings directly.
         // (String key instead of kAXTrustedCheckOptionPrompt, a non-Sendable C global.)
-        // Re-prompting just stacks that alert on top of Settings, so only ask once.
         if UserDefaults.standard.bool(forKey: "askedForAccessibility") {
             open(.accessibility)
         } else {
