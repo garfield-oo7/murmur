@@ -4,19 +4,31 @@ struct MenuContent: View {
     let model: AppModel
 
     var body: some View {
-        let hotkey = model.hotkey
+        let dictation = model.dictation
         let permissions = model.permissions
 
-        Text(hotkeyStatus(hotkey))
-        if let press = hotkey.lastPress {
-            Text("Last press \(press.formatted(date: .omitted, time: .standard))" + holdSuffix(hotkey))
+        Text(status)
+        if let error = dictation.lastError {
+            Text("⚠︎ \(error)")
+        }
+        if let text = dictation.lastTranscript {
+            Divider()
+            Text("Last: \(text.count > 60 ? text.prefix(60) + "…" : text)")
+            Button("Copy Last Dictation") {
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(text, forType: .string)
+            }
         }
 
         Divider()
 
-        Text("Microphone: \(permissions.microphoneGranted ? "allowed" : "not allowed")")
-        Text("Accessibility: \(permissions.accessibility ? "allowed" : "not allowed")")
+        if !permissions.allGranted {
+            Text("Microphone: \(permissions.microphoneGranted ? "allowed" : "not allowed")")
+            Text("Accessibility: \(permissions.accessibility ? "allowed" : "not allowed")")
+        }
         Button("Set Up Murmur…") { model.showSetup() }
+        Button("Settings…") { model.showSettings() }
+            .keyboardShortcut(",")
 
         Divider()
 
@@ -25,16 +37,15 @@ struct MenuContent: View {
             .onAppear { permissions.refresh() }
     }
 
-    private func hotkeyStatus(_ hotkey: HotkeyManager) -> String {
-        switch hotkey.registrationStatus {
-        case nil: "Hotkey \(hotkey.displayName): not registered"
-        case noErr?: "Hotkey \(hotkey.displayName): pressed \(hotkey.pressCount)×" + (hotkey.isHeld ? " (held)" : "")
-        case let status?: "Hotkey \(hotkey.displayName): registration failed (\(status))"
+    private var status: String {
+        let hotkey = model.hotkey
+        guard hotkey.isRegistered else {
+            return "Hotkey \(hotkey.displayName) unavailable. Choose another in Settings."
         }
-    }
-
-    private func holdSuffix(_ hotkey: HotkeyManager) -> String {
-        guard !hotkey.isHeld, let held = hotkey.lastHoldDuration else { return "" }
-        return String(format: ", released after %.2f s", held)
+        return switch model.dictation.state {
+        case .idle: "Hold \(hotkey.displayName) to dictate"
+        case .starting, .listening: "Listening…"
+        case .finalizing: "Transcribing…"
+        }
     }
 }
