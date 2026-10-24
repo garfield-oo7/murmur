@@ -84,8 +84,16 @@ final class DictationController {
                 } else {
                     self.lastTranscript = text
                     if self.logsTranscripts { Self.log.notice("transcript: \(text, privacy: .public)") }
+                    try await self.insert(text)
+                    if self.logsTranscripts {
+                        try? await Task.sleep(for: .milliseconds(500))
+                        let landed = TextInserter.focusedTextForTesting() ?? "(unreadable)"
+                        Self.log.notice("focused text after insert: \(landed, privacy: .public)")
+                    }
                 }
                 Sound.stop.play()
+            } catch let error as DictationError {
+                self.fail(error)
             } catch {
                 Self.log.error("finish failed: \(error, privacy: .public)")
                 self.fail(message: error.localizedDescription)
@@ -110,6 +118,14 @@ final class DictationController {
     }
 
     // MARK: Helpers
+
+    private func insert(_ text: String) async throws {
+        do {
+            try await TextInserter.insert(text)
+        } catch TextInserter.Failure.notTrusted {
+            throw DictationError.accessibilityNotAllowed
+        }
+    }
 
     private func reset() {
         session = nil

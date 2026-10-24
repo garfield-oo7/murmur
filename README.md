@@ -26,9 +26,11 @@ macOS ties those permissions to the app's code signature. `build.sh` signs every
 ## Using Murmur
 
 - **Hold ⌥D** (Option+D) in any app. Start speaking after the soft *tink*: that's when the mic is live.
-- **Let go** to finish. A *pop* means the text is ready. For now it appears in Murmur's menu (🎙 in the menu bar) with **Copy Last Dictation**. Typing it into the app you're using is the next milestone.
+- **Let go** to finish. The text is typed where your text cursor is, and a *pop* confirms it. The last dictation also stays in Murmur's menu (🎙 in the menu bar) with **Copy Last Dictation**.
+- Murmur pastes through the clipboard and puts back what you had copied. The dictation is marked as temporary, so clipboard managers that follow the nspasteboard.org convention skip it. If an app doesn't like pasting, switch **Insert text by** in Settings.
+- Password fields (and Terminal with Secure Keyboard Entry) block typed input on purpose. Murmur then leaves the text in its menu.
 - **Esc** while holding cancels. A very short tap does nothing.
-- **Settings…** in the menu: change the shortcut, pick the microphone (built-in by default, so AirPods aren't hijacked), turn sounds off.
+- **Settings…** in the menu: change the shortcut, pick the microphone (built-in by default, so AirPods aren't hijacked), choose how text is inserted, turn sounds off.
 
 ## Repo layout
 - `Murmur/`, `Murmur.xcodeproj`, `Config/`: the menu bar app

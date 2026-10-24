@@ -63,7 +63,7 @@ final class AppModel {
         hotkey.onCancel = { [dictation] in dictation.cancel() }
         dictation.onError = { [weak self] error in
             switch error {
-            case .microphoneNotAllowed, .modelNotInstalled: self?.showSetup()
+            case .microphoneNotAllowed, .modelNotInstalled, .accessibilityNotAllowed: self?.showSetup()
             case .noMicrophone: break
             }
         }

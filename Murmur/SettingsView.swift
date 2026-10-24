@@ -7,6 +7,7 @@ struct SettingsView: View {
     let model: AppModel
     @AppStorage("playSounds") private var playSounds = true
     @AppStorage(Microphone.defaultsKey) private var microphone = Microphone.builtIn
+    @AppStorage(TextInserter.methodKey) private var insertionMethod = TextInserter.Method.paste.rawValue
 
     var body: some View {
         Form {
@@ -26,6 +27,9 @@ struct SettingsView: View {
                     Divider()
                     ForEach(others, id: \.uniqueID) { Text($0.localizedName).tag($0.uniqueID) }
                 }
+            }
+            Picker("Insert text by", selection: $insertionMethod) {
+                ForEach(TextInserter.Method.allCases) { Text($0.title).tag($0.rawValue) }
             }
             Toggle("Play start and stop sounds", isOn: $playSounds)
         }

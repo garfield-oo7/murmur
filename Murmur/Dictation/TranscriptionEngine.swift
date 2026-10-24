@@ -7,12 +7,14 @@ enum DictationError: LocalizedError {
     case noMicrophone
     case microphoneNotAllowed
     case modelNotInstalled
+    case accessibilityNotAllowed
 
     var errorDescription: String? {
         switch self {
         case .noMicrophone: "No microphone found."
         case .microphoneNotAllowed: "Murmur isn't allowed to use the microphone."
         case .modelNotInstalled: "The speech model isn't downloaded yet."
+        case .accessibilityNotAllowed: "Murmur needs Accessibility access to type into other apps. The text is in Murmur's menu."
         }
     }
 }
