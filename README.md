@@ -12,7 +12,20 @@ On-device voice dictation for macOS 27. Hold **Option+D**, speak, and release: y
 - macOS 27, Apple silicon
 - Xcode 27+
 
+## Building the app
+
+```sh
+scripts/make-dev-cert.sh   # once: creates a local "Murmur Dev" signing certificate (asks for your Mac password)
+scripts/build.sh           # builds, installs to ~/Applications/Murmur.app and launches it
+```
+
+Murmur lives in the menu bar (no Dock icon). On first launch a setup window asks for **Microphone** and **Accessibility** access and downloads the English speech model.
+
+macOS ties those permissions to the app's code signature. `build.sh` signs every build with the same local certificate, so permissions survive rebuilds. Without the certificate it signs ad-hoc, and you have to re-grant Accessibility after each build. You can open `Murmur.xcodeproj` in Xcode too, but builds run from Xcode are ad-hoc signed, so use the script when you need working permissions.
+
 ## Repo layout
+- `Murmur/`, `Murmur.xcodeproj`, `Config/`: the menu bar app
+- `scripts/`: build and signing helpers
 - `spike/`: feasibility checks (speech model availability, hotkey registration)
 - `prototype/`: `murmur-cli`, a command-line prototype (mic → `SpeechTranscriber` → text, with latency timings)
 

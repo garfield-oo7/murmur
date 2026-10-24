@@ -15,3 +15,6 @@ xcuserdata/
 spike/check
 spike/hotkeytest
 spike/hotkeyfire
+
+# Local signing material
+*.p12
