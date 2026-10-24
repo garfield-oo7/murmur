@@ -24,14 +24,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         runSelfTestIfRequested()
     }
 
-    /// `open Murmur.app --args --test-dictation 4 [--test-audio file.wav]` records for 4 s
-    /// as if the hotkey were held, so dictation can be checked without pressing keys.
+    /// `open Murmur.app --args --test-dictation 4 [--test-audio file.wav] [--test-no-insert]`
+    /// records for 4 s as if the hotkey were held, so dictation can be checked without
+    /// pressing keys.
     private func runSelfTestIfRequested() {
         let args = CommandLine.arguments
         guard let i = args.firstIndex(of: "--test-dictation"), i + 1 < args.count,
               let seconds = Double(args[i + 1]) else { return }
         let dictation = model.dictation
         dictation.logsTranscripts = true
+        dictation.insertsText = !args.contains("--test-no-insert")
         if let j = args.firstIndex(of: "--test-audio"), j + 1 < args.count {
             dictation.testAudio = URL(fileURLWithPath: args[j + 1])
         }

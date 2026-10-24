@@ -72,6 +72,7 @@ nonisolated final class CaptureSource: AudioSource, @unchecked Sendable {
     let pipe = InputPipe()
     let name = "capture"
     private let module: any SpeechModule
+    private let levelTap: LevelTap?
     // Written in start(), read in stop(); the controller never overlaps the two.
     private var provider: CaptureInputSequenceProvider?
     private var forward: Task<Void, Never>?
@@ -79,7 +80,10 @@ nonisolated final class CaptureSource: AudioSource, @unchecked Sendable {
     /// How long stop() waits for in-flight buffers. Live buffers are ~11 ms (M1).
     static let drainWindow: Duration = .milliseconds(50)
 
-    init(module: any SpeechModule) { self.module = module }
+    init(module: any SpeechModule, meter: LevelMeter?) {
+        self.module = module
+        self.levelTap = meter.map(LevelTap.init)
+    }
 
     func start() async throws {
         guard let device = Microphone.resolve() else {
@@ -88,6 +92,9 @@ nonisolated final class CaptureSource: AudioSource, @unchecked Sendable {
         log.notice("mic: \(device.localizedName, privacy: .public)")
         let provider = try await CaptureInputSequenceProvider.providerWithSession(from: device, compatibleWith: [module])
         self.provider = provider
+        if let levelTap, !levelTap.attach(to: provider.captureSession) {
+            log.notice("level tap unavailable; pill bars will stay idle")
+        }
         let box = Unchecked(value: provider)
         let pipe = self.pipe
         forward = Task.detached(priority: .userInitiated) {
@@ -108,7 +115,11 @@ nonisolated final class CaptureSource: AudioSource, @unchecked Sendable {
     func stop() async {
         if let provider {
             let box = Unchecked(value: provider)
-            await Task.detached(priority: .userInitiated) { box.value.captureSession.stopRunning() }.value
+            let tap = levelTap.map { Unchecked(value: $0) }
+            await Task.detached(priority: .userInitiated) {
+                box.value.captureSession.stopRunning()
+                tap?.value.detach(from: box.value.captureSession)
+            }.value
         }
         // Wait briefly for in-flight buffers, ending early if the provider's sequence
         // finishes by itself. Never await `forward` directly: it might never end.
@@ -130,10 +141,14 @@ nonisolated final class EngineSource: AudioSource, @unchecked Sendable {
     let pipe = InputPipe()
     let name = "engine"
     private let module: any SpeechModule
+    private let meter: LevelMeter?
     private let engine = AVAudioEngine()
     private var converter: AnalyzerInputConverter?
 
-    init(module: any SpeechModule) { self.module = module }
+    init(module: any SpeechModule, meter: LevelMeter?) {
+        self.module = module
+        self.meter = meter
+    }
 
     func start() async throws {
         let converter = try await AnalyzerInputConverter.converter(compatibleWith: [module])
@@ -149,9 +164,13 @@ nonisolated final class EngineSource: AudioSource, @unchecked Sendable {
         let node = engine.inputNode
         let format = node.outputFormat(forBus: 0)
         let pipe = self.pipe
+        let meter = self.meter
         // Deprecated in macOS 27 in favour of installTapOnBus:…:error:block:, but that one is
         // NS_REFINED_FOR_SWIFT and the SDK ships no Swift overlay for it yet.
         node.installTap(onBus: 0, bufferSize: 1024, format: format) { buffer, _ in
+            if let meter, let samples = buffer.floatChannelData {
+                meter.record(samples: samples[0], count: Int(buffer.frameLength))
+            }
             do {
                 for input in try converter.value.convert(buffer, at: nil) { pipe.yield(input) }
             } catch {

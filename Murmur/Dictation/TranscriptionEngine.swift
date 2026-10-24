@@ -72,9 +72,11 @@ final class DictationSession {
 
     /// Self-test only: read this file instead of the microphone.
     private let testAudio: URL?
+    private let meter: LevelMeter?
 
-    init(pressedAt: ContinuousClock.Instant, testAudio: URL? = nil) {
+    init(pressedAt: ContinuousClock.Instant, meter: LevelMeter? = nil, testAudio: URL? = nil) {
         self.pressedAt = pressedAt
+        self.meter = meter
         self.testAudio = testAudio
     }
 
@@ -137,7 +139,7 @@ final class DictationSession {
             try await begin(file)
             return file
         }
-        let capture = CaptureSource(module: module)
+        let capture = CaptureSource(module: module, meter: meter)
         do {
             try await begin(capture)
             return capture
@@ -146,7 +148,7 @@ final class DictationSession {
             Logger(subsystem: "io.github.garfield-oo7.Murmur", category: "audio")
                 .error("capture provider failed (\(error, privacy: .public)); using AVAudioEngine")
             await capture.stop()
-            let engine = EngineSource(module: module)
+            let engine = EngineSource(module: module, meter: meter)
             try await begin(engine)
             return engine
         }

@@ -23,6 +23,16 @@ final class DictationController {
     var logsTranscripts = false
     /// Set by `--test-audio`: transcribe this file instead of the microphone.
     var testAudio: URL?
+    /// Set by `--test-no-insert`: keep the text in the menu only.
+    var insertsText = true
+
+    /// Mic loudness, shared with the pill.
+    let meter = LevelMeter()
+    @ObservationIgnored let pill: FlowPill
+
+    init() {
+        pill = FlowPill(meter: meter)
+    }
 
     @ObservationIgnored private var session: DictationSession?
     @ObservationIgnored private var startTask: Task<Bool, Never>?
@@ -41,13 +51,17 @@ final class DictationController {
         pressedAt = .now
         state = .starting
         lastError = nil
+        meter.reset()
+        pill.listening()
 
-        let session = DictationSession(pressedAt: pressedAt, testAudio: testAudio)
+        let session = DictationSession(pressedAt: pressedAt, meter: meter, testAudio: testAudio)
         self.session = session
-        // The mic needs ~0.25 s to deliver audio; the sound means "go ahead and speak".
+        // The mic needs ~0.25 s to deliver audio; the sound and the bars coming alive
+        // mean "go ahead and speak".
         session.onMicLive = { [weak self, weak session] in
             guard let self, let session, self.session === session, self.state != .idle else { return }
             Sound.start.play()
+            self.pill.micLive()
         }
         startTask = Task {
             do {
@@ -73,6 +87,7 @@ final class DictationController {
             return
         }
         state = .finalizing
+        pill.transcribing()
         let startTask = self.startTask
         Task {
             guard await startTask?.value == true, self.session === session else { return }
@@ -84,14 +99,15 @@ final class DictationController {
                 } else {
                     self.lastTranscript = text
                     if self.logsTranscripts { Self.log.notice("transcript: \(text, privacy: .public)") }
-                    try await self.insert(text)
-                    if self.logsTranscripts {
+                    if self.insertsText { try await self.insert(text) }
+                    if self.logsTranscripts, self.insertsText {
                         try? await Task.sleep(for: .milliseconds(500))
                         let landed = TextInserter.focusedTextForTesting() ?? "(unreadable)"
                         Self.log.notice("focused text after insert: \(landed, privacy: .public)")
                     }
                 }
                 Sound.stop.play()
+                self.pill.finished()
             } catch let error as DictationError {
                 self.fail(error)
             } catch {
@@ -106,9 +122,12 @@ final class DictationController {
     func cancel(quietly: Bool = false) {
         guard let session, state != .idle else { return }
         reset()
-        if !quietly {
+        if quietly {
+            pill.finished()
+        } else {
             Self.log.notice("cancelled")
             Sound.cancel.play()
+            pill.cancelled()
         }
         let startTask = self.startTask
         Task {
@@ -140,6 +159,7 @@ final class DictationController {
     private func fail(message: String) {
         lastError = message
         Sound.cancel.play()
+        pill.failed()
     }
 
     private func logTimings(_ t: DictationSession.Timings, held: Duration) {
@@ -149,6 +169,7 @@ final class DictationController {
             press→first audio \(t.pressToFirstAudio.map(ms) ?? "–", privacy: .public), \
             audio \(t.audioSeconds, format: .fixed(precision: 2), privacy: .public)s in \(t.buffers, privacy: .public) buffers, \
             drain ended early \(t.drainEndedEarly, privacy: .public), \
+            mic peak \(self.meter.peakDB, format: .fixed(precision: 1), privacy: .public) dBFS, \
             release→text \(ms(t.releaseToText), privacy: .public)
             """)
     }

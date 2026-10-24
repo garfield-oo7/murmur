@@ -6,6 +6,8 @@ import SwiftUI
 struct SettingsView: View {
     let model: AppModel
     @AppStorage("playSounds") private var playSounds = true
+    @AppStorage(FlowPill.enabledKey) private var showPill = true
+    @AppStorage(LevelMeter.sensitivityKey) private var sensitivity = 0.5
     @AppStorage(Microphone.defaultsKey) private var microphone = Microphone.builtIn
     @AppStorage(TextInserter.methodKey) private var insertionMethod = TextInserter.Method.paste.rawValue
 
@@ -32,6 +34,18 @@ struct SettingsView: View {
                 ForEach(TextInserter.Method.allCases) { Text($0.title).tag($0.rawValue) }
             }
             Toggle("Play start and stop sounds", isOn: $playSounds)
+            Toggle("Show waveform while dictating", isOn: $showPill)
+            LabeledContent("Waveform sensitivity") {
+                Slider(value: $sensitivity, in: 0...1) {
+                    EmptyView()
+                } minimumValueLabel: {
+                    Text("Low").font(.caption)
+                } maximumValueLabel: {
+                    Text("High").font(.caption)
+                }
+                .frame(width: 180)
+            }
+            .disabled(!showPill)
         }
         .formStyle(.grouped)
         .frame(width: 420)
