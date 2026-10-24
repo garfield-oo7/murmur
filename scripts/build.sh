@@ -14,9 +14,17 @@ cd "$(dirname "$0")/.."
 
 CONFIG="${CONFIG:-Debug}"
 IDENTITY="${MURMUR_SIGN_IDENTITY:-Murmur Dev}"
+BUNDLE_ID="io.github.garfield-oo7.Murmur"
 DEST="$HOME/Applications/Murmur.app"
 open_app=1
 [[ "${1:-}" == "--no-open" ]] && open_app=0
+
+# The app's designated code requirement: what TCC stores with a permission grant and
+# re-checks against the running binary on every access. Ad-hoc: `cdhash H"…"` (changes
+# every build); "Murmur Dev": `identifier … and certificate leaf = H"…"` (stable).
+designated_requirement() {
+  codesign -d -r- "$1" 2>/dev/null | grep -o 'designated => .*' || true
+}
 
 echo "→ building ($CONFIG)"
 xcodebuild -project Murmur.xcodeproj -scheme Murmur -configuration "$CONFIG" \
@@ -31,6 +39,8 @@ fi
 
 echo "→ installing to $DEST"
 mkdir -p "$(dirname "$DEST")"
+old_requirement=""
+[[ -d "$DEST" ]] && old_requirement=$(designated_requirement "$DEST")
 rm -rf "$DEST"
 ditto "$built" "$DEST"
 
@@ -45,6 +55,22 @@ fi
 codesign --force --options runtime --timestamp=none \
   --entitlements Config/Murmur.entitlements --sign "$sign_as" "$DEST"
 codesign --verify --strict "$DEST"
+
+# TCC keeps the requirement the app had when Accessibility was granted and denies
+# access when the running binary no longer satisfies it, while System Settings still
+# shows the toggle on (and toggling it off/on doesn't refresh the stored requirement).
+# When the requirement changes, drop the dead record so the app can register afresh.
+new_requirement=$(designated_requirement "$DEST")
+if [[ -n "$old_requirement" && "$old_requirement" != "$new_requirement" ]]; then
+  echo "→ code requirement changed; resetting Murmur's Accessibility record"
+  echo "  was: ${old_requirement#designated => }"
+  echo "  now: ${new_requirement#designated => }"
+  tccutil reset Accessibility "$BUNDLE_ID" >/dev/null
+  # Let the app show the system Accessibility prompt again; that re-adds Murmur to
+  # the list with the new requirement.
+  defaults delete "$BUNDLE_ID" askedForAccessibility 2>/dev/null || true
+  echo "  Re-grant: click “Open Settings” in Murmur, then turn Murmur on in Settings."
+fi
 
 if (( open_app )); then
   echo "→ launching"
