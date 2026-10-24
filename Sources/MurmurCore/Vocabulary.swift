@@ -29,6 +29,9 @@ public struct Vocabulary: Sendable {
     private var markers: Set<String> = []
     /// Longest span to try, in tokens (words and the separators between them).
     private var maxTokens = 1
+    /// Multi-word terms ("Claude Opus"), normalized: these make a sentence technical too.
+    private var phraseMarkers: Set<String> = []
+    private var maxPhraseWords = 0
 
     private static let log = Logger(subsystem: "io.github.garfield-oo7.Murmur", category: "vocabulary")
 
@@ -79,6 +82,10 @@ public struct Vocabulary: Sendable {
             // Canonicalize by spelling only when that can't capitalize ordinary prose:
             // skip single words that are plain English ("Go", "Linear", "Modal").
             if !term.contains(" "), !Self.isDictionaryWord(term) { markers.insert(term) }
+            if term.contains(" ") {
+                phraseMarkers.insert(Self.normalize(term))
+                maxPhraseWords = max(maxPhraseWords, term.split(separator: " ").count)
+            }
             if term.contains(" ") || !Self.isDictionaryWord(term) {
                 canonical[Self.normalize(term)] = term
                 // Spoken forms can have extra breaks: "tail scale" for "Tailscale".
@@ -98,10 +105,20 @@ public struct Vocabulary: Sendable {
         return rewrite(first, technical: true)
     }
 
-    /// A path or slash command, or a term like "Claude" or "Docker".
+    /// A path or slash command, a term like "Docker", or a name like "Claude Opus".
     private func isTechnical(_ text: String) -> Bool {
         if text.contains("~/") || text.range(of: #"(^|\s)/[a-z]"#, options: .regularExpression) != nil { return true }
-        return Self.tokenize(text).contains { $0.isWord && markers.contains($0.text) }
+        let words = Self.tokenize(text).filter(\.isWord).map(\.text)
+        if words.contains(where: markers.contains) { return true }
+        guard maxPhraseWords > 1 else { return false }
+        for start in words.indices {
+            var phrase = ""
+            for end in start..<min(words.count, start + maxPhraseWords) {
+                phrase += Self.normalize(words[end])
+                if end > start, phraseMarkers.contains(phrase) { return true }
+            }
+        }
+        return false
     }
 
     private func rewrite(_ text: String, technical: Bool) -> String {

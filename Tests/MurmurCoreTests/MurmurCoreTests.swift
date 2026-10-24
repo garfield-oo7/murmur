@@ -110,6 +110,9 @@ private let vocabulary = Vocabulary(text: """
         #expect(bundled.terms.count > 2_000)
         let prose = "We deployed the model to the server, then reviewed the plan with the team."
         #expect(bundled.canonicalize(prose) == prose)
+        #expect(bundled.canonicalize("Compare Claude Opus and clot on it.") == "Compare Claude Opus and Claude Sonnet.")
+        #expect(bundled.canonicalize("Which SONEET versions exist?") == "Which Sonnet versions exist?")
+        #expect(bundled.canonicalize("So it goes, a sonnet a day.") == "So it goes, a sonnet a day.")
     }
 }
 

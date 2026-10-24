@@ -27,6 +27,8 @@ Claude
 Claude Haiku
 Claude Sonnet
 Claude Opus
+Sonnet
+Opus
 Claude Sonnet 4.5
 Claude Haiku 4.5
 Claude Opus 4.5
@@ -3201,7 +3203,8 @@ LangGraph | land graph
 kubectl | !cube control | !cube cuddle | kube control
 Postgres | post gress | post grass
 Murmur | !mural | !murals
-Claude Sonnet | clots on it | clot sonnet | cloud sonnet
+Claude Sonnet | clots on it | clot on it | clot sonnet | cloud sonnet
+Sonnet | soneet | sonet
 Claude Opus | cloud opus | clot opus
 Claude Code | clot code | cloud code | clawed code
 Claude | clawed | clod
