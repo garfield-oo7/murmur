@@ -1,5 +1,6 @@
 import CoreMedia
 import Foundation
+import MurmurCore
 import os
 import Speech
 

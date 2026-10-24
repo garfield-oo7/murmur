@@ -4,17 +4,10 @@ PLAN.md
 # macOS
 .DS_Store
 
-# Xcode / Swift build output
-build/
-DerivedData/
+# Build output
 .build/
-*.xcuserstate
-xcuserdata/
-
-# Compiled spike binaries
-spike/check
-spike/hotkeytest
-spike/hotkeyfire
+build/
+.swiftpm/
 
 # Local signing material
 *.p12

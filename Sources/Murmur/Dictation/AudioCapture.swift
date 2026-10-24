@@ -4,9 +4,8 @@ import os
 import Speech
 import Synchronization
 
-// Ported from prototype/Sources/murmur-cli/Inputs.swift. Everything here is explicitly
-// nonisolated: the target defaults to MainActor isolation, but audio arrives on capture
-// and realtime threads.
+// Everything here is explicitly nonisolated: the target defaults to MainActor
+// isolation, but audio arrives on capture and realtime threads.
 
 /// The stream handed to `SpeechAnalyzer.start(inputSequence:)`. We own it (rather than
 /// passing a provider's sequence straight through) so that releasing the hotkey ends

@@ -12,12 +12,12 @@ import os
 /// 2. To canonicalize the transcript: a phrase matching a term once spaces, hyphens,
 ///    dots and case are ignored ("tail scale", "VLLM") is rewritten to the term
 ///    ("Tailscale", "vLLM"), plus explicit `Term | mishearing` rules.
-nonisolated struct Vocabulary: Sendable {
-    private(set) var terms: [String] = []
+public struct Vocabulary: Sendable {
+    public private(set) var terms: [String] = []
     /// Terms from the user's own file, which get priority where the list must be short.
-    private(set) var userTerms: [String] = []
+    public private(set) var userTerms: [String] = []
     /// Changes whenever the term list does; used to know when to recompile.
-    var fingerprint: String { "\(terms.count):\(terms.joined(separator: "\n").hashValue)" }
+    public var fingerprint: String { "\(terms.count):\(terms.joined(separator: "\n").hashValue)" }
     /// Normalized spoken form → canonical term.
     private var canonical: [String: String] = [:]
     /// Lowercased mishearing → canonical term, from `Term | mishearing` lines.
@@ -32,12 +32,12 @@ nonisolated struct Vocabulary: Sendable {
 
     private static let log = Logger(subsystem: "io.github.garfield-oo7.Murmur", category: "vocabulary")
 
-    static let userFileURL = URL.applicationSupportDirectory
+    public static let userFileURL = URL.applicationSupportDirectory
         .appending(path: "Murmur", directoryHint: .isDirectory)
         .appending(path: "Vocabulary.txt")
 
     /// Bundled list plus the user's file.
-    static func load() -> Vocabulary {
+    public static func load() -> Vocabulary {
         var vocabulary = Vocabulary()
         if let bundled = Bundle.main.url(forResource: "Vocabulary", withExtension: "txt") {
             vocabulary.add(contentsOf: bundled)
@@ -49,9 +49,9 @@ nonisolated struct Vocabulary: Sendable {
         return vocabulary
     }
 
-    init() {}
+    public init() {}
 
-    init(text: String) {
+    public init(text: String) {
         add(text: text)
     }
 
@@ -92,7 +92,7 @@ nonisolated struct Vocabulary: Sendable {
     /// Formats paths and slash commands, then rewrites recognized phrases to their
     /// vocabulary spelling (longest match wins). Real-word mishearings are applied only
     /// when the sentence turns out to be technical.
-    func canonicalize(_ text: String) -> String {
+    public func canonicalize(_ text: String) -> String {
         let first = rewrite(SpokenSyntax.apply(text), technical: false)
         guard isTechnical(first) else { return first }
         return rewrite(first, technical: true)
@@ -164,7 +164,7 @@ nonisolated struct Vocabulary: Sendable {
     }
 
     /// Lowercased, with spaces, hyphens, dots, slashes and underscores removed.
-    static func normalize(_ s: String) -> String {
+    public static func normalize(_ s: String) -> String {
         String(s.lowercased().filter { !" -._/".contains($0) })
     }
 
@@ -176,7 +176,7 @@ nonisolated struct Vocabulary: Sendable {
     /// Whether `s` is an English word, allowing simple inflections the word list lacks
     /// ("clots", "murals", "deployed", "running"). Punctuation is ignored, so "/compact"
     /// counts as "compact".
-    static func isDictionaryWord(_ s: String) -> Bool {
+    public static func isDictionaryWord(_ s: String) -> Bool {
         let w = normalize(s)
         guard !w.isEmpty else { return false }
         if dictionary.contains(w) { return true }
@@ -191,7 +191,7 @@ nonisolated struct Vocabulary: Sendable {
 
     // MARK: User file
 
-    static let userFileTemplate = """
+    public static let userFileTemplate = """
         # My Murmur vocabulary
         #
         # Words and names Murmur should recognize and spell exactly as written here.
@@ -207,7 +207,7 @@ nonisolated struct Vocabulary: Sendable {
         """
 
     /// Creates the user file with a template if it doesn't exist yet.
-    static func ensureUserFile() throws -> URL {
+    public static func ensureUserFile() throws -> URL {
         let url = userFileURL
         if !FileManager.default.fileExists(atPath: url.path(percentEncoded: false)) {
             try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)

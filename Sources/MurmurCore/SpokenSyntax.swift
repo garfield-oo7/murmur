@@ -4,9 +4,9 @@ import Foundation
 /// spoken "slash" and "dot" into "/" and ".", but glues commands onto the previous word
 /// ("Run/model"), mishears "tilde" ("Tilda/", "Hilda/") and capitalizes path parts
 /// ("~/.Claude/settings.Jason").
-nonisolated enum SpokenSyntax {
+public enum SpokenSyntax {
     /// Slash commands of Claude Code, Codex and similar CLIs.
-    static let slashCommands: Set<String> = [
+    public static let slashCommands: Set<String> = [
         "model", "compact", "clear", "init", "help", "review", "config", "cost", "memory", "permissions",
         "resume", "agents", "mcp", "hooks", "login", "logout", "status", "doctor", "export", "context",
         "rewind", "plugin", "plugins", "skills", "add-dir", "terminal-setup", "statusline", "usage", "ide",
@@ -28,7 +28,7 @@ nonisolated enum SpokenSyntax {
     ]
 
     /// Works word by word (whitespace-separated), so prose is never touched.
-    static func apply(_ text: String) -> String {
+    public static func apply(_ text: String) -> String {
         var output = ""
         var word = ""
         for ch in text {

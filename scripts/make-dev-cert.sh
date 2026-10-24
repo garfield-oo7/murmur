@@ -53,4 +53,4 @@ security set-key-partition-list -S apple-tool:,apple:,codesign: -s -l "$NAME" "$
 echo
 security find-identity -p codesigning "$KEYCHAIN" | grep "\"$NAME\""
 echo "(\"NOT_TRUSTED\" is expected for a self-signed certificate; codesign can still use it.)"
-echo "Done. scripts/build.sh will now sign Murmur with \"$NAME\"."
+echo "Done. scripts/install.sh will now sign Murmur with \"$NAME\"."

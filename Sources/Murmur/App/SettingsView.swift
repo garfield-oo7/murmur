@@ -1,3 +1,4 @@
+import MurmurCore
 import AVFoundation
 import Carbon.HIToolbox
 import CoreAudio
