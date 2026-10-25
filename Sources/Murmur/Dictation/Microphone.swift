@@ -25,7 +25,7 @@ nonisolated enum Microphone {
 
     /// The device to record from; falls back to the system default if the chosen one
     /// is gone (e.g. a USB mic was unplugged).
-    static func resolve() -> AVCaptureDevice? {
+    static func resolve(_ choice: String = choice) -> AVCaptureDevice? {
         switch choice {
         case systemDefault:
             break

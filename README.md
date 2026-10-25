@@ -49,6 +49,7 @@ It quits Murmur, removes the login item, the app, its settings, your vocabulary 
 - **Context-aware fixes:** phrases that are real English ("clots on it") are only corrected to a term (Claude Sonnet) when the sentence is technical, i.e. it has a path, a `/command` or a known name.
 - **History:** every dictation is saved on your Mac in `~/Library/Application Support/Murmur/History.jsonl`, one JSON line each: time, app, what the recognizer heard, what was typed, and how long it took. The menu's **Recent Dictations** shows the last 10 (click to copy). Settings lets you turn it off, choose how long to keep it (default 30 days), show it in Finder or clear it. Cancelled dictations (Esc) aren't saved. Comparing `heard` with `text` is a quick way to find words for your vocabulary.
 - Murmur **opens at login** (turn it off in Settings, or in System Settings → General → Login Items).
+- **Microphone** in the menu: switch mics without opening Settings. Pick **System Default** to follow the input chosen in Control Center, System Settings or another app like TouchDeck.
 - **Settings…** in the menu: change the shortcut, pick the microphone (Automatic by default: a wired headset like EarPods when plugged in, otherwise the built-in mic; never AirPods, so they aren't switched into call mode), choose how text is inserted, turn sounds or the waveform off, and set how strongly the bars react.
 
 ## For other apps

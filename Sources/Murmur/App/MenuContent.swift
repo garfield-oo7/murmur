@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MenuContent: View {
     let model: AppModel
+    @AppStorage(Microphone.defaultsKey) private var microphone = Microphone.automatic
 
     var body: some View {
         let dictation = model.dictation
@@ -32,6 +33,19 @@ struct MenuContent: View {
 
         Divider()
 
+        Picker("Microphone", selection: $microphone) {
+            Text(Self.title("Automatic", for: Microphone.automatic)).tag(Microphone.automatic)
+            Text("Built-in").tag(Microphone.builtIn)
+            Text(Self.title("System Default", for: Microphone.systemDefault)).tag(Microphone.systemDefault)
+            let others = Microphone.available.filter { $0.uniqueID != "BuiltInMicrophoneDevice" }
+            if !others.isEmpty {
+                Divider()
+                ForEach(others, id: \.uniqueID) { Text($0.localizedName).tag($0.uniqueID) }
+            }
+        }
+
+        Divider()
+
         if !permissions.allGranted {
             Text("Microphone: \(permissions.microphoneGranted ? "allowed" : "not allowed")")
             Text("Accessibility: \(permissions.accessibility ? "allowed" : "not allowed")")
@@ -49,6 +63,12 @@ struct MenuContent: View {
 
     private static func menuTitle(_ text: String) -> String {
         text.count > 60 ? text.prefix(60) + "…" : text
+    }
+
+    /// "Automatic (EarPods)": the mic a setting would use right now.
+    private static func title(_ name: String, for choice: String) -> String {
+        guard let mic = Microphone.resolve(choice) else { return name }
+        return "\(name) (\(mic.localizedName))"
     }
 
     private static func copy(_ text: String) {
