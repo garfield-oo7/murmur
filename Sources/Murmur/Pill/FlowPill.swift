@@ -2,7 +2,7 @@ import AppKit
 import SwiftUI
 
 /// The recording indicator: a small dark capsule at the bottom-center of the screen
-/// whose white bars follow the microphone level (PLAN.md §3a).
+/// whose white bars follow the microphone level.
 @Observable
 final class FlowPill {
     enum Phase: Equatable {
@@ -95,6 +95,13 @@ final class FlowPill {
 
     private func show() {
         hideTask?.cancel()
+        // A fresh window each time the pill appears. macOS doesn't reliably add a
+        // hidden all-Spaces window to full-screen Spaces created after it was first
+        // shown, so a reused panel can end up missing from the Space you're on.
+        if let old = panel, !old.isVisible {
+            old.contentView = nil
+            panel = nil
+        }
         let panel = self.panel ?? makePanel()
         self.panel = panel
         position(panel)
