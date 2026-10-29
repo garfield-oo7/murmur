@@ -107,9 +107,17 @@ private let vocabulary = Vocabulary(text: """
         let url = URL(filePath: #filePath).deletingLastPathComponent()
             .appending(path: "../../Resources/Vocabulary.txt").standardized
         let bundled = Vocabulary(text: try String(contentsOf: url, encoding: .utf8))
-        #expect(bundled.terms.count > 2_000)
-        let prose = "We deployed the model to the server, then reviewed the plan with the team."
-        #expect(bundled.canonicalize(prose) == prose)
+        #expect(bundled.terms.count > 100)
+        for prose in [
+            "We deployed the model to the server, then reviewed the plan with the team.",
+            "What I am trying to do is put it in a box, as I said, so let me do it.",
+            "I sent it to my mama as a minor favor, a lost cause.",
+        ] {
+            #expect(bundled.canonicalize(prose) == prose)
+        }
+        #expect(bundled.canonicalize("Make soul 6.1 review it.") == "Make Sol 6.1 review it.")
+        #expect(bundled.canonicalize("Add it to the touch desk app in T3.") == "Add it to the TouchDeck app in T3.")
+        #expect(bundled.canonicalize("Run the quiz on the staff box over Tailscale.") == "Run the quiz on the dev box over Tailscale.")
         #expect(bundled.canonicalize("Compare Claude Opus and clot on it.") == "Compare Claude Opus and Claude Sonnet.")
         #expect(bundled.canonicalize("Which SONEET versions exist?") == "Which Sonnet versions exist?")
         #expect(bundled.canonicalize("So it goes, a sonnet a day.") == "So it goes, a sonnet a day.")

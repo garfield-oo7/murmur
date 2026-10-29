@@ -3,15 +3,15 @@ import os
 
 /// Custom vocabulary from plain-text files (format: see the header of Vocabulary.txt).
 ///
-/// - Bundled: `Vocabulary.txt` (AI/ML models, labs and tooling).
+/// - Bundled: `Vocabulary.txt` (projects, agents, models and stack from real dictations).
 /// - User: `~/Library/Application Support/Murmur/Vocabulary.txt`, same format, merged on top.
 ///
 /// Used two ways:
 /// 1. As contextual strings for DictationTranscriber, which biases recognition towards
 ///    the terms. (M6 test: SpeechTranscriber ignores contextual strings entirely.)
 /// 2. To canonicalize the transcript: a phrase matching a term once spaces, hyphens,
-///    dots and case are ignored ("tail scale", "VLLM") is rewritten to the term
-///    ("Tailscale", "vLLM"), plus explicit `Term | mishearing` rules.
+///    dots and case are ignored ("tail scale", "open f1") is rewritten to the term
+///    ("Tailscale", "OpenF1"), plus explicit `Term | mishearing` rules.
 public struct Vocabulary: Sendable {
     public private(set) var terms: [String] = []
     /// Terms from the user's own file, which get priority where the list must be short.
@@ -152,9 +152,9 @@ public struct Vocabulary: Sendable {
         // Only spans made of words joined by spaces, hyphens or dots, e.g. "tail scale",
         // "GPT 4o", "Qwen 3 coder". Never across other punctuation.
         guard span.allSatisfy({ $0.isWord || [" ", "-", "."].contains($0.text) }) else { return nil }
-        guard let term = canonical[Self.normalize(phrase)] else { return nil }
-        // A single recognized word that's already a dictionary word stays as is.
-        return term == phrase ? nil : term
+        // Already spelled right ("jackdaw-balatro") still counts as a match, so a shorter
+        // term inside it ("Balatro") can't respell part of it.
+        return canonical[Self.normalize(phrase)]
     }
 
     private struct Token {

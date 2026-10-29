@@ -44,7 +44,7 @@ It quits Murmur, removes the login item, the app, its settings, your vocabulary 
 - **Live text:** while you speak, a caption above the pill shows the last two lines of what Murmur hears, about half a second behind your voice, with your vocabulary already applied. Words that are still a guess are slightly dimmed. Nothing is typed until you let go. Turn it off with **Settings → Show words as you speak**.
 - **⌫ (Delete)** while holding starts over: what you've said so far is thrown away, and after the *tink* you continue from scratch without letting go.
 - **Esc** while holding cancels (the pill shakes). A very short tap does nothing.
-- **Vocabulary:** Murmur knows about 2,900 AI-engineering and developer names (current models, labs, tools) from `Resources/Vocabulary.txt`, and spells them exactly: "tail scale" → Tailscale, "deep seek v3" → DeepSeek-V3, "cube control" → kubectl. Add your own with **Settings → Edit My Vocabulary…** (same format; the changes apply after your next dictation).
+- **Vocabulary:** Murmur knows about 180 names taken from real dictations (projects, coding agents, models, dev stack) from `Resources/Vocabulary.txt`, and spells them exactly: "tail scale" → Tailscale, "touch desk" → TouchDeck, "soul 6.1" → Sol 6.1. The list is built from the dictation history, so add a term once it shows up there. Add your own with **Settings → Edit My Vocabulary…** (same format; the changes apply after your next dictation).
 - **Paths and commands:** say "tilde slash dot claude slash settings dot json" for `~/.claude/settings.json`, or "slash model" for `/model`.
 - **Context-aware fixes:** phrases that are real English ("clots on it") are only corrected to a term (Claude Sonnet) when the sentence is technical, i.e. it has a path, a `/command` or a known name.
 - **History:** every dictation is saved on your Mac in `~/Library/Application Support/Murmur/History.jsonl`, one JSON line each: time, app, what the recognizer heard, what was typed, and how long it took. The menu's **Recent Dictations** shows the last 10 (click to copy). Settings lets you turn it off, choose how long to keep it (default 30 days), show it in Finder or clear it. Cancelled dictations (Esc) aren't saved. Comparing `heard` with `text` is a quick way to find words for your vocabulary.
@@ -84,7 +84,7 @@ From a terminal: `~/Applications/Murmur.app/Contents/MacOS/Murmur --status` prin
 ```
 ## Section headings and blank lines are ignored
 Tailscale                      # a term: spelled exactly like this
-kubectl | cube control         # a term with mishearings to correct
+TouchDeck | touch desk         # a term with mishearings to correct
 Murmur | !mural                # "!" corrects it even in ordinary sentences
 ```
 
@@ -105,7 +105,7 @@ say -o /tmp/sample.wav --data-format=LEI16@16000 "open tilde slash dot claude"
 /usr/bin/log stream --info --predicate 'subsystem == "io.github.garfield-oo7.Murmur"'
 ```
 
-`--transcribe` compiles the full vocabulary first, so it takes about 12 seconds. The app does that once at launch.
+`--transcribe` compiles the full vocabulary first, so it takes under a second. The app does that once at launch.
 
 ## Repo layout
 - `Package.swift`: SwiftPM package (no Xcode project)
