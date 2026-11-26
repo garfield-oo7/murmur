@@ -112,6 +112,14 @@ private let vocabulary = Vocabulary(text: """
             "We deployed the model to the server, then reviewed the plan with the team.",
             "What I am trying to do is put it in a box, as I said, so let me do it.",
             "I sent it to my mama as a minor favor, a lost cause.",
+            "My soul felt light after the long walk.",
+            "We can brainstorm and get up to speed tomorrow.",
+            "The joke landed and the full room laughed.",
+            "Log the full request body, then meet at 7:20 p.m. by the main map.",
+            "Send the spec back to the client by Friday.",
+            "The tide left flat mud along the river bank.",
+            "The rapper played an HDMI cable trick on stage.",
+            "Put it in the .env file and open ~/.claude settings.",
         ] {
             #expect(bundled.canonicalize(prose) == prose)
         }
@@ -121,6 +129,24 @@ private let vocabulary = Vocabulary(text: """
         #expect(bundled.canonicalize("Compare Claude Opus and clot on it.") == "Compare Claude Opus and Claude Sonnet.")
         #expect(bundled.canonicalize("Which SONEET versions exist?") == "Which Sonnet versions exist?")
         #expect(bundled.canonicalize("So it goes, a sonnet a day.") == "So it goes, a sonnet a day.")
+        #expect(bundled.canonicalize("Get GPT 6.1 soul X high in fast mode to review it.") == "Get GPT-6.1 Sol xhigh in fast mode to review it.")
+        #expect(bundled.canonicalize("Run an Op. 5.5 audit on the Lennox death box.") == "Run an Opus 5.5 audit on the Linux dev box.")
+        #expect(bundled.canonicalize("Sell it after anti-three and keep the hanging chair.") == "Sell it after ante 3 and keep the Hanging Chad.")
+        #expect(bundled.canonicalize("Use the 11 labs API and fix the URUX.") == "Use the ElevenLabs API and fix the UI/UX.")
+        // A lowercase phrase keeps its capital at the start of a sentence.
+        #expect(bundled.canonicalize("Merge the PRS. Board request number two is next.") == "Merge the PRs. Pull request number two is next.")
+        // Mishearings from the 2026-11-26 review of 800 dictations.
+        #expect(bundled.canonicalize("Ask GPT 6.2 so to check it, then GB six Luna.") == "Ask GPT-6.2 Sol to check it, then GPT-6 Luna.")
+        #expect(bundled.canonicalize("Compare JLM and GLM 553 in a council.") == "Compare GLM and GLM 5.3 in a council.")
+        #expect(bundled.canonicalize("Open the threads in G3 code and make an HDMI page.") == "Open the threads in T3 Code and make an HTML page.")
+        #expect(bundled.canonicalize("Use the peace tax and potato skills here.") == "Use the pstack and poteto skills here.")
+        #expect(bundled.canonicalize("Do you need the solar password for Superbase?") == "Do you need the sudo password for Supabase?")
+        #expect(bundled.canonicalize("I will open the spec pack, then buy the cabin dish.") == "I will open the spectral pack, then buy the Cavendish.")
+        #expect(bundled.canonicalize("Keep the male rebate and the next month joker.") == "Keep the Mail-In Rebate and the xmult joker.")
+        #expect(bundled.canonicalize("A flat mud joker beats the Steve Jacob here.") == "A flat mult joker beats the Steel Joker here.")
+        #expect(bundled.canonicalize("Add the Anthropic EBI key to the cold base.") == "Add the Anthropic API key to the codebase.")
+        #expect(bundled.canonicalize("Install anti-gravity and opencode on the dev box.") == "Install Antigravity and OpenCode on the dev box.")
+        #expect(bundled.canonicalize("Fix the env file.") == "Fix the .env file.")
     }
 }
 

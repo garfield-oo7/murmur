@@ -42,6 +42,8 @@ Vocabulary.txt
 ## Agents and harnesses
 T3
 T3 Code
+OpenCode
+Antigravity
 Claude Code
 Codex
 Cursor
@@ -61,6 +63,15 @@ AGENTS.md
 CLAUDE.md
 README.md
 HANDOVER.md
+subagent
+pull request
+PRs
+xhigh
+fast mode
+pstack
+poteto mode
+SKILL.md
+UI/UX
 
 ## Models
 Claude
@@ -79,6 +90,16 @@ Sol 6.1
 GPT-6 Sol
 GPT-5.6 Sol
 Luna 6.1
+Sol
+Luna
+Astra
+GPT-6 Luna
+GPT-6.2 Sol
+GPT-6 Astra
+Fable 5.2
+Gemini
+GLM 5.3
+ElevenLabs
 OpenAI
 ChatGPT
 chatgpt.com
@@ -211,6 +232,56 @@ microservices
 ## Writing and research
 Overleaf
 AACR
+LaTeX
+HTML
+mind map
+mind maps
+720p
+1080p
+360p
+
+## Balatro
+joker
+jokers
+ante
+ante 1
+ante 2
+ante 3
+ante 4
+ante 5
+ante 7
+mult
+xmult
+mult joker
+xmult joker
+flat mult
+chips
+reroll
+discard
+big blind
+small blind
+blue seal
+blue seal card
+red seal
+purple seal
+tarot cards
+planet cards
+spectral pack
+Buffoon Pack
+Celestial Pack
+voucher
+Hanging Chad
+Cavendish
+Blueprint
+Mail-In Rebate
+Steel Joker
+Spare Trousers
+Golden Joker
+Square Joker
+Constellation
+Misprint
+Immolate
+Overstock
 
 ## Apple and this app
 SpeechAnalyzer
@@ -235,25 +306,92 @@ Murmur | !mural | !murals
 Murmur app | mama app | MyMA app
 Murmur application | !murderer application | !moment application
 TouchDeck | !touch desk | !tocuhdesk | !tochdesk
-EpitopeMiner | !Epitope minor | epic of minor
+EpitopeMiner | !Epitope minor | !epic of minor | !epitome minor
 ReadKernel | !red kernel | !red colonel
 jackdaw-balatro | jack Balatro | Jacko Balatro
 Vocabulary.txt | vocabulary.ESC
 Claude Sonnet | clots on it | clot on it | clot sonnet | cloud sonnet
 Sonnet | soneet | sonet
 Claude Opus | cloud opus | clot opus
-Claude Code | clot code | cloud code | clawed code | !plot code
+Claude Code | clot code | cloud code | clawed code | !plot code | !cloth code | !clot code
 Claude | clawed | clod
 Sol 6.1 | soul 6.1
-GPT-6.1 Sol | get-6.1 sol | get 6.1 sol
+Sol | soul | Saul
+Sol and Opus | !soul and opus
+GPT-6.1 Sol | get-6.1 sol | get 6.1 sol | GPT 6.1 soul | GPT 6.1 sold | GPT 6.1 Saul | GPT 611 soul | GB 6.1 soul | GB 6.1 sold
+GPT-6.1 Sol | GPT 6.1 so | SGPT 6.1 sold
+GPT-6.2 Sol | GPT 6.2 soul | GPT 6.2 sold | GB 6.2 soul | GB 6.2 sold | GPT 6.2 so | GT 6.2 soul
+GPT-6 Luna | GPT six Luna | GPT six lunar | GB six Luna | GPT six loaner
+GPT-6 Astra | GPT six Astra
+GLM | JLM | GRM
+GLM 5.3 | GLM 553 | GLM fiber three
+Opus 5.5 | Op. 5.5 | office 5.5
+Fable 5.1 | favor 5.1
+xhigh | !X high | !ex high
+ElevenLabs | 11 labs | 11 laps | 11 lab | 11 lap
+UI/UX | URUX | UYUX
+API | EPI
+LaTeX | latex
+Overleaf | !overleaf
+Bun | bun
+three PRs | 3P hours
+own fork | own folk
+PRs | PRS
+poteto mode | !potato mode
+T3 Code | D3 code | P3 code | G3 code
+T3 Connect | !treaty connect
+pstack | !peace tax
+poteto skill | !potato skill | !potato scale
+poteto skills | !potato skills
+HTML page | !HDMI page | !HDM page | !CML page
+Supabase | !Superbase
+sudo password | !pseudo password | !solar password
+IAM user | !IM user
+Jupyter notebooks | !Jupiter notebooks
+upstream repo | !upstream rapper
+this repo | this rapper
+codebase | cold base
+endpoint | hint point
+API key | EBI key | EPI key
+AWS Skill Builder | !ES skill builder
+Google Flow | Google floats
+HEVC | HEV
+Hinglish
 Qwen models | Quinn models
 DeepSeek-V4 | deep sea 4
-AGENTS.md | agents.d | agent start MD | agents MD
+AGENTS.md | agents.d | agent start MD | agents MD | agent.MB | agent.MD | agent to M5 | agent for MB
 CLAUDE.md | claw.md | clawed.md | cloud.md
-dev box | !staff box | !stamp box | !step box | !deaf box
-Linux dev box | !limits deaf box | !next staff box
+dev box | !staff box | !stamp box | !step box | !deaf box | !death box | !Dave box | !stand box | deadbox
+Linux dev box | !limits deaf box | !next staff box | !next dev box | !next text dev box | lyrics box | Lennox death box
+Linux | Lennox
 waveform | !wave perform
-pull request | board request
+pull request | !board request | !pole request | !pool request
+pull requests | !board requests | !pole requests | !pool requests
+720p | !720 P
+1080p | !1080 P
+360p | !360 P | !360 B
+mind maps | !mine maps
+ante 1 | anti-one | anti one | anti-1 | anti 1
+ante 2 | anti-two | anti two | anti-2 | anti 2 | anti-to | anti to
+ante 3 | anti-three | anti three | anti-3 | anti 3
+ante 4 | anti-four | anti four | anti-4 | anti 4
+ante 5 | anti-five | anti five | anti-5 | anti 5
+ante 7 | anti-seven | anti seven | anti-7 | anti 7
+xmult joker | !X month joker | !next month joker | !X multiply joker | !extra month joker
+ante 5 | NT5
+mult joker | mud joker | malt joker | multiply joker
+flat mult | flat mud | !flat malt | flat mall
+flat mult joker | !flat mud joker | !flat multiply joker
+Hanging Chad | hanging chair | !hanging chat | !handing chat
+Cavendish | !cabin dish | Camish
+Mail-In Rebate | !male rebate | !mail and rebate | !million rebate | !mail rebate
+Spare Trousers | !spare roses
+blue seal card | !blue scene card | !blue ski card | !blue sealed card
+Buffoon Pack | !buff pack | buffoon back
+Steel Joker | !steel guard joker | !Steve Jacob | steel guard
+spectral pack | !spec pack | spec back
+spectral packs | !spec backs | !spectrum packs
+planet cards | !plant cards | !planted cards
 GPU server | GPS server
 kubectl | !cube control | !cube cuddle | kube control
 Firehose | firhose

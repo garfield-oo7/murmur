@@ -40,13 +40,13 @@ public struct Vocabulary: Sendable {
         .appending(path: "Vocabulary.txt")
 
     /// Bundled list plus the user's file.
-    public static func load() -> Vocabulary {
+    public static func load(userFile: URL = userFileURL) -> Vocabulary {
         var vocabulary = Vocabulary()
         if let bundled = Bundle.main.url(forResource: "Vocabulary", withExtension: "txt") {
             vocabulary.add(contentsOf: bundled)
         }
         let before = vocabulary.terms.count
-        vocabulary.add(contentsOf: userFileURL)
+        vocabulary.add(contentsOf: userFile)
         vocabulary.userTerms = Array(vocabulary.terms[before...])
         log.notice("loaded \(vocabulary.terms.count) terms, \(vocabulary.corrections.count) correction rules")
         return vocabulary
@@ -128,11 +128,14 @@ public struct Vocabulary: Sendable {
         var i = 0
         while i < tokens.count {
             var replaced = false
-            if tokens[i].isWord {
+            // A word right after "." or "/" is inside a path or file name ("~/.claude",
+            // ".env"): leave it, or ".env" would become "..env".
+            let insidePath = i > 0 && [".", "/"].contains(tokens[i - 1].text)
+            if tokens[i].isWord, !insidePath {
                 for length in stride(from: min(maxTokens, tokens.count - i), through: 1, by: -1) {
                     let span = tokens[i..<(i + length)]
                     guard span.last!.isWord, let term = match(span, technical: technical) else { continue }
-                    output += term
+                    output += Self.sentenceCased(term, spoken: tokens[i].text, after: output)
                     i += length
                     replaced = true
                     break
@@ -144,6 +147,15 @@ public struct Vocabulary: Sendable {
             }
         }
         return output
+    }
+
+    /// A lowercase phrase ("pull request", "blue seal") keeps the capital the recognizer
+    /// gave it at the start of a sentence. Single words ("npm", "xhigh") never do.
+    private static func sentenceCased(_ term: String, spoken: String, after output: String) -> String {
+        guard term.contains(" "), term == term.lowercased(), spoken.first?.isUppercase == true else { return term }
+        let before = output.trimmingCharacters(in: .whitespaces)
+        guard before.isEmpty || ".!?".contains(before.last!) else { return term }
+        return term.prefix(1).uppercased() + term.dropFirst()
     }
 
     private func match(_ span: ArraySlice<Token>, technical: Bool) -> String? {
