@@ -26,7 +26,7 @@ done
 
 echo "This removes:"
 echo "  • $APP"
-echo "  • Murmur's login item, settings and privacy permissions"
+echo "  • Murmur's login item, weekly tune schedule, settings and privacy permissions"
 (( keep_vocabulary )) || echo "  • $SUPPORT (your vocabulary and dictation history)"
 if (( ! assume_yes )); then
   read -q "reply?Continue? [y/N] " || { echo; echo "Nothing removed."; exit 1; }
@@ -43,6 +43,13 @@ fi
 if [[ -x "$APP/Contents/MacOS/Murmur" ]]; then
   echo "→ removing login item"
   "$APP/Contents/MacOS/Murmur" --unregister-login-item 2>/dev/null || true
+fi
+
+TUNE_JOB="$HOME/Library/LaunchAgents/$BUNDLE_ID.tune.plist"
+if [[ -f "$TUNE_JOB" ]]; then
+  echo "→ removing the weekly tune schedule"
+  launchctl bootout "gui/$(id -u)/$BUNDLE_ID.tune" 2>/dev/null || true
+  rm -f "$TUNE_JOB"
 fi
 
 echo "→ removing app"
